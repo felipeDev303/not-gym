@@ -147,6 +147,7 @@ const redirect = Astro.url.searchParams.get('redirect') ?? '/app/map'
 
     #magic-form { display: flex; flex-direction: column; }
     #success-msg { display: none; }
+    #error-msg { display: none; }
   </style>
 </head>
 <body>
@@ -161,6 +162,7 @@ const redirect = Astro.url.searchParams.get('redirect') ?? '/app/map'
     <div id="success-msg" class="success">
       Revisá tu email — te enviamos un link de acceso.
     </div>
+    <div id="error-msg" class="error"></div>
 
     <form id="magic-form">
       <label for="email">Email</label>
@@ -194,17 +196,29 @@ const redirect = Astro.url.searchParams.get('redirect') ?? '/app/map'
     const form = document.getElementById('magic-form')
     const successMsg = document.getElementById('success-msg')
 
+    const errorMsg = document.getElementById('error-msg')
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault()
+      errorMsg.style.display = 'none'
       const email = document.getElementById('email').value
-      const res = await fetch('/api/auth/magic-link', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, redirect }),
-      })
-      if (res.ok) {
-        form.style.display = 'none'
-        successMsg.style.display = 'block'
+      try {
+        const res = await fetch('/api/auth/magic-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, redirect }),
+        })
+        if (res.ok) {
+          form.style.display = 'none'
+          successMsg.style.display = 'block'
+        } else {
+          const data = await res.text()
+          errorMsg.textContent = `Error ${res.status}: ${data.slice(0, 200)}`
+          errorMsg.style.display = 'block'
+        }
+      } catch (err) {
+        errorMsg.textContent = `Error: ${err.message}`
+        errorMsg.style.display = 'block'
       }
     })
   </script>

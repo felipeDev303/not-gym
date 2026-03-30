@@ -9,6 +9,9 @@ import react from '@astrojs/react';
 export default defineConfig({
   output: 'server',
   site: 'https://notgym.org',
+  security: {
+    checkOrigin: false,
+  },
   adapter: node({
     mode: 'standalone'
   }),
