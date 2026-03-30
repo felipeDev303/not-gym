@@ -33,7 +33,8 @@ export const PUT: APIRoute = async ({ params, request, cookies, locals }) => {
   const body = await request.json()
   const supabase = createSupabaseServerClient({ request, cookies })
 
-  const { data: existing, error: fetchError } = await supabase
+  const adminClient = createSupabaseAdminClient()
+  const { data: existing, error: fetchError } = await adminClient
     .from('spots')
     .select('created_by')
     .eq('id', id!)
@@ -41,7 +42,7 @@ export const PUT: APIRoute = async ({ params, request, cookies, locals }) => {
 
   if (fetchError) return new Response(JSON.stringify({ error: fetchError.message }), { status: 404 })
 
-  const isAdmin = session.user.role === 'service_role'
+  const isAdmin = session.user.app_metadata?.role === 'admin'
   if (existing.created_by !== session.user.id && !isAdmin) {
     return new Response(JSON.stringify({ error: 'Prohibido' }), { status: 403 })
   }
@@ -51,7 +52,7 @@ export const PUT: APIRoute = async ({ params, request, cookies, locals }) => {
     Object.entries(body).filter(([key]) => allowedFields.includes(key))
   )
 
-  const client = isAdmin ? createSupabaseAdminClient() : supabase
+  const client = isAdmin ? adminClient : supabase
 
   const { data, error } = await client
     .from('spots')
@@ -73,7 +74,8 @@ export const DELETE: APIRoute = async ({ params, request, cookies, locals }) => 
   const { id } = params
   const supabase = createSupabaseServerClient({ request, cookies })
 
-  const { data: existing, error: fetchError } = await supabase
+  const adminClient = createSupabaseAdminClient()
+  const { data: existing, error: fetchError } = await adminClient
     .from('spots')
     .select('created_by')
     .eq('id', id!)
@@ -81,12 +83,12 @@ export const DELETE: APIRoute = async ({ params, request, cookies, locals }) => 
 
   if (fetchError) return new Response(JSON.stringify({ error: fetchError.message }), { status: 404 })
 
-  const isAdmin = session.user.role === 'service_role'
+  const isAdmin = session.user.app_metadata?.role === 'admin'
   if (existing.created_by !== session.user.id && !isAdmin) {
     return new Response(JSON.stringify({ error: 'Prohibido' }), { status: 403 })
   }
 
-  const client = isAdmin ? createSupabaseAdminClient() : supabase
+  const client = isAdmin ? adminClient : supabase
 
   const { error } = await client.from('spots').delete().eq('id', id!)
   if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })

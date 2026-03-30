@@ -131,19 +131,19 @@ Lista de tareas granulares basada en el SDD y README.
 
 ## 10. Deploy
 
-- [ ] Buildear imagen Docker y probar localmente (`docker build` + `docker run`)
-- [ ] Crear proyecto en CubePath y desplegar imagen
-- [ ] Configurar variables de entorno en CubePath
-- [ ] Configurar DNS en Cloudflare: registro A `notgym.org` → IP de CubePath (proxied: ON)
-- [ ] Verificar HTTPS y redirección www → apex
+- [x] Buildear imagen Docker y probar localmente (`docker build` + `docker run`)
+- [x] Crear proyecto en CubePath y desplegar imagen
+- [x] Configurar variables de entorno en CubePath
+- [x] Configurar DNS en Cloudflare: registro A `notgym.org` → IP de CubePath (proxied: ON)
+- [x] Verificar HTTPS y redirección www → apex
 
 ---
 
 ## 11. QA y Pulido
 
-- [ ] Probar flujo completo de visitante anónimo (explorar → detalle)
-- [ ] Probar flujo de usuario registrado (login → agregar spot → subir foto → trazar ruta)
+- [x] Probar flujo completo de visitante anónimo (explorar → detalle)
+- [x] Probar flujo de usuario registrado (login → agregar spot → subir foto → trazar ruta)
 - [ ] Probar flujo de moderación (admin aprueba/rechaza spot)
-- [ ] Verificar que `SUPABASE_SERVICE_ROLE_KEY` no aparece en ningún bundle del cliente
+- [x] Verificar que `SUPABASE_SERVICE_ROLE_KEY` no aparece en ningún bundle del cliente
 - [ ] Verificar responsive del mapa en mobile
 - [ ] Revisar que spots no verificados no aparecen en el mapa público
