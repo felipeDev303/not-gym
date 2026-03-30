@@ -7,7 +7,8 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server', 
+  output: 'server',
+  site: 'https://notgym.org',
   adapter: node({
     mode: 'standalone'
   }),
