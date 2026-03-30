@@ -1,55 +1,55 @@
 ﻿# NotGym
 
-> The best gym is the one that doesn't charge you.
+> El mejor gym es el que no te cobra.
 
-NotGym is a collaborative map for discovering and contributing free outdoor training spots — calisthenics zones, athletic tracks, running routes, fitness parks, and more.
+NotGym es un mapa colaborativo para descubrir y contribuir spots de entrenamiento al aire libre y de acceso gratuito — zonas de calistenia, pistas atléticas, rutas de running, parques fitness y más.
 
-**Live:** [notgym.org](https://notgym.org)
-
----
-
-## Features
-
-- **Interactive map** — Browse verified spots near you, filtered by training category
-- **Spot detail pages** — Photos, description, address, and contributor info
-- **Contribute spots** — Authenticated users can pin new spots on the map
-- **Photo uploads** — Add photos to any existing spot
-- **Running routes** — Draw and save routes directly on the map with automatic distance calculation
-- **Moderation** — Admin panel to approve or reject submitted spots
+**En vivo:** [notgym.org](https://notgym.org)
 
 ---
 
-## Tech Stack
+## Funcionalidades
 
-| Layer | Technology |
+- **Mapa interactivo** — Explorá spots verificados cerca tuyo, filtrados por categoría de entrenamiento
+- **Páginas de detalle** — Fotos, descripción, dirección e información del contribuidor
+- **Contribuir spots** — Los usuarios autenticados pueden agregar nuevos spots al mapa
+- **Subida de fotos** — Agregá fotos a cualquier spot existente
+- **Rutas de running** — Trazá y guardá rutas directamente en el mapa con cálculo automático de distancia
+- **Moderación** — Panel de admin para aprobar o rechazar spots enviados
+
+---
+
+## Stack Tecnológico
+
+| Capa | Tecnología |
 |---|---|
-| Frontend / SSR | Astro 5 (server mode) |
-| Interactive Map | Leaflet + OpenStreetMap |
-| Route Drawing | Leaflet Draw + Turf.js |
-| Database | Supabase (PostgreSQL + PostGIS) |
-| Storage | Supabase Storage |
-| Auth | Supabase Auth (magic link + Google OAuth) |
+| Frontend / SSR | Astro 5 (modo server) |
+| Mapa Interactivo | Leaflet + OpenStreetMap |
+| Trazado de Rutas | Leaflet Draw + Turf.js |
+| Base de Datos | Supabase (PostgreSQL + PostGIS) |
+| Almacenamiento | Supabase Storage |
+| Autenticación | Supabase Auth (magic link + Google OAuth) |
 | Deploy | CubePath (Docker / Node) |
 | DNS / Proxy | Cloudflare |
 
 ---
 
-## Getting Started
+## Cómo Empezar
 
-### Prerequisites
+### Requisitos Previos
 
 - Node.js 20+
-- A [Supabase](https://supabase.com) project with PostGIS enabled
+- Un proyecto en [Supabase](https://supabase.com) con PostGIS habilitado
 
-### Install
+### Instalación
 
 ```bash
 npm install
 ```
 
-### Environment Variables
+### Variables de Entorno
 
-Create a `.env` file at the project root:
+Creá un archivo `.env` en la raíz del proyecto:
 
 ```env
 PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
@@ -58,19 +58,19 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 PUBLIC_APP_URL=https://notgym.org
 ```
 
-> `SUPABASE_SERVICE_ROLE_KEY` is server-side only and must never be exposed to the client.
+> `SUPABASE_SERVICE_ROLE_KEY` es exclusivamente server-side y nunca debe exponerse al cliente.
 
-### Database Setup
+### Configuración de la Base de Datos
 
-Run the SQL schema in your Supabase SQL editor (see [`SDD.md §5.2`](./SDD.md#52-database-schema)) and seed the initial categories from [`SDD.md §5.4`](./SDD.md#54-initial-seed-data--categories).
+Ejecuta el esquema SQL en el editor SQL de Supabase (ver [`SDD.md §5.2`](./SDD.md#52-esquema-de-base-de-datos)) y cargá las categorías iniciales desde [`SDD.md §5.4`](./SDD.md#54-datos-iniciales--categorías).
 
-### Dev Server
+### Servidor de Desarrollo
 
 ```bash
 npm run dev
 ```
 
-### Build & Run
+### Build y Ejecución
 
 ```bash
 npm run build
@@ -79,7 +79,7 @@ node ./dist/server/entry.mjs
 
 ---
 
-## Deploy (Docker)
+## Despliegue (Docker)
 
 ```dockerfile
 FROM node:20-alpine
@@ -95,44 +95,44 @@ CMD ["node", "./dist/server/entry.mjs"]
 
 ---
 
-## Project Structure
+## Estructura del Proyecto
 
 ```
 src/
 ├── pages/
 │   ├── index.astro              # Landing page
 │   ├── app/
-│   │   ├── map.astro            # Interactive map
-│   │   ├── spots/[id].astro     # Spot detail
-│   │   └── submit.astro         # New spot form
+│   │   ├── map.astro            # Mapa interactivo
+│   │   ├── spots/[id].astro     # Detalle de spot
+│   │   └── submit.astro         # Formulario de nuevo spot
 │   └── api/
 │       ├── spots.ts
 │       ├── spots/[id].ts
 │       ├── spots/[id]/photos.ts
 │       └── routes.ts
 └── components/
-    ├── MapView.tsx               # React island (client:only)
+    ├── MapView.tsx               # Isla React (client:only)
     ├── SpotCard.tsx
     └── FilterBar.tsx
 ```
 
 ---
 
-## Documentation
+## Documentación
 
-- [`SDD.md`](./SDD.md) — Full Software Design Document (architecture, data model, API, security)
-- [`notgym-arquitectura.md`](./notgym-arquitectura.md) — Original architecture notes (Spanish)
+- [`SDD.md`](./SDD.md) — Documento de Diseño de Software completo (arquitectura, modelo de datos, API, seguridad)
+- [`notgym-arquitectura.md`](./notgym-arquitectura.md) — Notas de arquitectura originales
 
 ---
 
 ## Roadmap
 
-- [ ] Ratings and reviews per spot
-- [ ] OSM Overpass API integration to pre-populate existing tracks
-- [ ] Mobile app (React Native / Expo) with offline mode
-- [ ] Gamification: badges for spots added or routes completed
-- [ ] GPX import/export for routes
-- [ ] Push notifications for new nearby spots
+- [ ] Sistema de valoraciones y reviews por spot
+- [ ] Integración con Overpass API de OSM para pre-poblar pistas existentes
+- [ ] App móvil (React Native / Expo) con modo offline
+- [ ] Gamificación: badges por spots agregados o rutas completadas
+- [ ] Importar / exportar rutas en formato GPX
+- [ ] Notificaciones cuando se agrega un spot cercano al usuario
 
 ---
 
