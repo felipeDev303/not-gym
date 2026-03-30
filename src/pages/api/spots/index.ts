@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { createSupabaseServerClient } from '../../../lib/supabase'
+import { createSupabaseServerClient, createSupabaseAdminClient } from '../../../lib/supabase'
 
 export const GET: APIRoute = async ({ url, request, cookies }) => {
   const lat = url.searchParams.get('lat')
@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     return new Response(JSON.stringify({ error: 'Faltan campos requeridos: name, category_id, latitude, longitude' }), { status: 400 })
   }
 
-  const supabase = createSupabaseServerClient({ request, cookies })
+  const supabase = createSupabaseAdminClient()
 
   const { data, error } = await supabase
     .from('spots')
