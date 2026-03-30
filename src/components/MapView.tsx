@@ -54,19 +54,21 @@ function LocateMeButton({ onLocate }: { onLocate: (lat: number, lng: number) => 
       { timeout: 8000 }
     )
   }
+  const btnStyle: React.CSSProperties = {
+    width: 44, height: 44, borderRadius: '50%',
+    background: '#1a1a1a',
+    border: '1.5px solid #2a2a2a',
+    color: '#f1f1f1', fontSize: '1.1rem', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
+    transition: 'border-color 0.15s, color 0.15s',
+  }
   return (
-    <div style={{ position: 'absolute', top: '4.5rem', right: '0.6rem', zIndex: 1000 }}>
-      <button
-        onClick={handleClick}
-        title="Centrar en mi ubicación"
-        style={{
-          width: 34, height: 34, borderRadius: 6,
-          background: '#1a1a1a', border: '2px solid #4ade80',
-          color: '#4ade80', fontSize: '1.1rem', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-        }}
-      >📍</button>
+    <div style={{ position: 'fixed', bottom: '5rem', right: '1.5rem', zIndex: 1000 }}>
+      <button onClick={handleClick} title="Centrar en mi ubicación" style={btnStyle}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#4ade80'; (e.currentTarget as HTMLElement).style.color = '#4ade80' }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2a2a2a'; (e.currentTarget as HTMLElement).style.color = '#f1f1f1' }}
+      >⊕</button>
     </div>
   )
 }
@@ -257,10 +259,13 @@ export function MapView({ session }: { session: boolean }) {
             href="/app/submit"
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: 48, height: 48, borderRadius: '50%',
-              background: '#4ade80', color: '#0f0f0f',
-              fontSize: '1.5rem', fontWeight: 700, textDecoration: 'none',
-              boxShadow: '0 4px 16px rgba(74,222,128,0.35)',
+              width: 44, height: 44, borderRadius: '50%',
+              background: '#1a1a1a',
+              border: '1.5px solid #4ade80',
+              color: '#4ade80',
+              fontSize: '1.4rem', fontWeight: 700, textDecoration: 'none',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
+              transition: 'background 0.15s',
             }}
             title="Agregar spot"
           >
