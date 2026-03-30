@@ -54,16 +54,16 @@ Lista de tareas granulares basada en el SDD y README.
 ## 3. API Routes
 
 ### Spots
-- [ ] `GET /api/spots` — Listar spots verificados con filtros opcionales (`?lat`, `?lng`, `?radius`, `?category`)
-- [ ] `POST /api/spots` — Crear spot (requiere sesión; `verified: false` por defecto)
-- [ ] `GET /api/spots/[id]` — Obtener detalle completo de un spot con sus fotos
-- [ ] `PUT /api/spots/[id]` — Actualizar spot (solo dueño o admin)
-- [ ] `DELETE /api/spots/[id]` — Eliminar spot (solo dueño o admin)
-- [ ] `POST /api/spots/[id]/photos` — Subir foto: validar MIME type, subir a Supabase Storage, guardar URL en `spot_photos`
+- [x] `GET /api/spots` — Lista por filtros o RPC `spots_near` según `?lat/lng/radius/category`
+- [x] `POST /api/spots` — Crea spot (sesión requerida; `verified: false`)
+- [x] `GET /api/spots/[id]` — Detalle completo con `spot_categories` y `spot_photos`
+- [x] `PUT /api/spots/[id]` — Actualiza (dueño o admin); filtra campos permitidos
+- [x] `DELETE /api/spots/[id]` — Elimina (dueño o admin)
+- [x] `POST /api/spots/[id]/photos` — Valida MIME + tamaño, sube a Storage, guarda URL en `spot_photos`
 
 ### Rutas
-- [ ] `GET /api/routes` — Listar todas las rutas
-- [ ] `POST /api/routes` — Guardar nueva ruta GeoJSON con distancia calculada
+- [x] `GET /api/routes` — Lista todas las rutas
+- [x] `POST /api/routes` — Valida LineString GeoJSON y guarda con distancia
 
 ---
 
