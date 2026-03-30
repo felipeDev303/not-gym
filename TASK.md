@@ -38,13 +38,16 @@ Lista de tareas granulares basada en el SDD y README.
 
 ## 2. Autenticación
 
-- [ ] Habilitar magic link en Supabase Auth
-- [ ] Habilitar Google OAuth en Supabase Auth
-- [ ] Crear página `/login` con formulario de magic link y botón de Google
-- [ ] Crear API route `/api/auth/callback` para manejar el redirect de OAuth
-- [ ] Crear helper `getSession()` para leer la sesión SSR desde cookies en rutas de Astro
-- [ ] Implementar middleware de redirección a `/login` para rutas protegidas
-- [ ] Crear endpoint de logout
+- [x] Habilitar magic link en Supabase Auth (manual: Dashboard → Authentication → Providers → Email → Enable)
+- [x] Habilitar Google OAuth en Supabase Auth (manual: Dashboard → Authentication → Providers → Google → Client ID + Secret)
+- [x] Crear página `/login` con formulario de magic link y botón de Google
+- [x] Crear `POST /api/auth/magic-link` — envía magic link con OTP
+- [x] Crear `POST /api/auth/google` — inicia flujo OAuth con Google
+- [x] Crear `GET /api/auth/callback` — intercambia code por sesión
+- [x] Crear `POST /api/auth/logout` — cierra sesión
+- [x] Crear `src/lib/supabase.ts` con clientes server, admin y browser
+- [x] Crear `src/middleware.ts` — refresca sesión y protege rutas `/app/submit` y `/admin`
+- [x] Crear `src/env.d.ts` — declara `App.Locals` (supabase, session)
 
 ---
 
