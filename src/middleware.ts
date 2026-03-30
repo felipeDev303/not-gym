@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from './lib/supabase'
 const PROTECTED_ROUTES = ['/app/submit', '/admin']
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const supabase = createSupabaseServerClient(context.cookies)
+  const supabase = createSupabaseServerClient(context)
 
   const { data: { session } } = await supabase.auth.getSession()
   context.locals.session = session

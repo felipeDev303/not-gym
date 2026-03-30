@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro'
 import { createSupabaseServerClient } from '../../../lib/supabase'
 
-export const GET: APIRoute = async ({ cookies }) => {
-  const supabase = createSupabaseServerClient(cookies)
+export const GET: APIRoute = async ({ request, cookies }) => {
+  const supabase = createSupabaseServerClient({ request, cookies })
 
   const { data, error } = await supabase
     .from('routes')
@@ -30,7 +30,7 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     return new Response(JSON.stringify({ error: 'geojson debe ser un LineString válido' }), { status: 400 })
   }
 
-  const supabase = createSupabaseServerClient(cookies)
+  const supabase = createSupabaseServerClient({ request, cookies })
 
   const { data, error } = await supabase
     .from('routes')

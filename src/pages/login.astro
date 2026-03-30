@@ -1,7 +1,7 @@
 ---
 import { createSupabaseServerClient } from '../lib/supabase'
 
-const supabase = createSupabaseServerClient(Astro.cookies)
+const supabase = createSupabaseServerClient({ request: Astro.request, cookies: Astro.cookies })
 const { data: { session } } = await supabase.auth.getSession()
 
 if (session) {

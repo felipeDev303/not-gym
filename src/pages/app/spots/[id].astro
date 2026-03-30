@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '../../../lib/supabase'
 const { id } = Astro.params
 const session = Astro.locals.session
 
-const supabase = createSupabaseServerClient(Astro.cookies)
+const supabase = createSupabaseServerClient({ request: Astro.request, cookies: Astro.cookies })
 
 const { data: spot, error } = await supabase
   .from('spots')

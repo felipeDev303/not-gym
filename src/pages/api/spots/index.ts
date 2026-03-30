@@ -1,13 +1,13 @@
 import type { APIRoute } from 'astro'
 import { createSupabaseServerClient } from '../../../lib/supabase'
 
-export const GET: APIRoute = async ({ url, cookies }) => {
+export const GET: APIRoute = async ({ url, request, cookies }) => {
   const lat = url.searchParams.get('lat')
   const lng = url.searchParams.get('lng')
   const radius = url.searchParams.get('radius') ?? '5000'
   const category = url.searchParams.get('category')
 
-  const supabase = createSupabaseServerClient(cookies)
+  const supabase = createSupabaseServerClient({ request, cookies })
 
   if (lat && lng) {
     let query = supabase.rpc('spots_near', {
@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     return new Response(JSON.stringify({ error: 'Faltan campos requeridos: name, category_id, latitude, longitude' }), { status: 400 })
   }
 
-  const supabase = createSupabaseServerClient(cookies)
+  const supabase = createSupabaseServerClient({ request, cookies })
 
   const { data, error } = await supabase
     .from('spots')

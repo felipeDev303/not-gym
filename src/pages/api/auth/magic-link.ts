@@ -8,9 +8,10 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     return new Response(JSON.stringify({ error: 'Email requerido' }), { status: 400 })
   }
 
-  const supabase = createSupabaseServerClient(cookies)
+  const supabase = createSupabaseServerClient({ request, cookies })
 
-  const callbackUrl = new URL('/api/auth/callback', url.origin)
+  const origin = process.env.PUBLIC_APP_URL ?? url.origin
+  const callbackUrl = new URL('/api/auth/callback', origin)
   callbackUrl.searchParams.set('next', redirectTo ?? '/app/map')
 
   const { error } = await supabase.auth.signInWithOtp({

@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '../../lib/supabase'
 const session = Astro.locals.session
 if (!session) return Astro.redirect('/login?redirect=/app/submit')
 
-const supabase = createSupabaseServerClient(Astro.cookies)
+const supabase = createSupabaseServerClient({ request: Astro.request, cookies: Astro.cookies })
 const { data: categories } = await supabase
   .from('spot_categories')
   .select('id, slug, name, icon')

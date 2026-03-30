@@ -1,19 +1,20 @@
 /// <reference types="astro/client" />
-import { createServerClient, createBrowserClient } from '@supabase/ssr'
+import { createServerClient, createBrowserClient, parseCookieHeader } from '@supabase/ssr'
 import type { AstroCookies } from 'astro'
 
-export function createSupabaseServerClient(cookies: AstroCookies) {
+export function createSupabaseServerClient({ request, cookies }: { request: Request, cookies: AstroCookies }) {
   return createServerClient(
     process.env.PUBLIC_SUPABASE_URL ?? import.meta.env.PUBLIC_SUPABASE_URL,
     process.env.PUBLIC_SUPABASE_ANON_KEY ?? import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        get(name: string) { return cookies.get(name)?.value },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        set(name: string, value: string, options: any) { cookies.set(name, value, options) },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        remove(name: string, options: any) { cookies.delete(name, options) },
+        getAll() {
+          return parseCookieHeader(request.headers.get('Cookie') ?? '')
+            .map(({ name, value }) => ({ name, value: value ?? '' }))
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => cookies.set(name, value, options))
+        },
       },
     }
   )

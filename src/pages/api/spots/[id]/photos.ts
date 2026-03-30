@@ -24,7 +24,7 @@ export const POST: APIRoute = async ({ params, request, cookies, locals }) => {
     return new Response(JSON.stringify({ error: 'El archivo supera el límite de 5 MB.' }), { status: 413 })
   }
 
-  const supabase = createSupabaseServerClient(cookies)
+  const supabase = createSupabaseServerClient({ request, cookies })
 
   const ext = file.type.split('/')[1]
   const filename = `${spotId}/${crypto.randomUUID()}.${ext}`

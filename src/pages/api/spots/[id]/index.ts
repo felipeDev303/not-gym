@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro'
 import { createSupabaseServerClient, createSupabaseAdminClient } from '../../../../lib/supabase'
 
-export const GET: APIRoute = async ({ params, cookies }) => {
+export const GET: APIRoute = async ({ params, request, cookies }) => {
   const { id } = params
-  const supabase = createSupabaseServerClient(cookies)
+  const supabase = createSupabaseServerClient({ request, cookies })
 
   const { data, error } = await supabase
     .from('spots')
@@ -31,7 +31,7 @@ export const PUT: APIRoute = async ({ params, request, cookies, locals }) => {
 
   const { id } = params
   const body = await request.json()
-  const supabase = createSupabaseServerClient(cookies)
+  const supabase = createSupabaseServerClient({ request, cookies })
 
   const { data: existing, error: fetchError } = await supabase
     .from('spots')
@@ -64,14 +64,14 @@ export const PUT: APIRoute = async ({ params, request, cookies, locals }) => {
   return new Response(JSON.stringify(data), { status: 200 })
 }
 
-export const DELETE: APIRoute = async ({ params, cookies, locals }) => {
+export const DELETE: APIRoute = async ({ params, request, cookies, locals }) => {
   const session = locals.session
   if (!session) {
     return new Response(JSON.stringify({ error: 'No autorizado' }), { status: 401 })
   }
 
   const { id } = params
-  const supabase = createSupabaseServerClient(cookies)
+  const supabase = createSupabaseServerClient({ request, cookies })
 
   const { data: existing, error: fetchError } = await supabase
     .from('spots')

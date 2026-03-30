@@ -1,10 +1,11 @@
 import type { APIRoute } from 'astro'
 import { createSupabaseServerClient } from '../../../lib/supabase'
 
-export const POST: APIRoute = async ({ cookies, redirect, url }) => {
-  const supabase = createSupabaseServerClient(cookies)
+export const POST: APIRoute = async ({ request, cookies, redirect, url }) => {
+  const supabase = createSupabaseServerClient({ request, cookies })
 
-  const callbackUrl = new URL('/api/auth/callback', url.origin).toString()
+  const origin = process.env.PUBLIC_APP_URL ?? url.origin
+  const callbackUrl = new URL('/api/auth/callback', origin).toString()
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
