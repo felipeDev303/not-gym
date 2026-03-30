@@ -42,6 +42,35 @@ type MapControlsProps = {
   onMapClick: (lat: number, lng: number) => void
 }
 
+function LocateMeButton({ onLocate }: { onLocate: (lat: number, lng: number) => void }) {
+  const map = useMap()
+  const handleClick = () => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        map.setView([coords.latitude, coords.longitude], 15)
+        onLocate(coords.latitude, coords.longitude)
+      },
+      () => alert('No se pudo obtener tu ubicación. Verificá los permisos del browser.'),
+      { timeout: 8000 }
+    )
+  }
+  return (
+    <div style={{ position: 'absolute', top: '4.5rem', right: '0.6rem', zIndex: 1000 }}>
+      <button
+        onClick={handleClick}
+        title="Centrar en mi ubicación"
+        style={{
+          width: 34, height: 34, borderRadius: 6,
+          background: '#1a1a1a', border: '2px solid #4ade80',
+          color: '#4ade80', fontSize: '1.1rem', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+        }}
+      >📍</button>
+    </div>
+  )
+}
+
 function MapControls({ session, onRouteCreated, onMapClick }: MapControlsProps) {
   const map = useMap()
   const onRouteCreatedRef = useRef(onRouteCreated)
@@ -190,6 +219,7 @@ export function MapView({ session }: { session: boolean }) {
           onRouteCreated={handleRouteCreated}
           onMapClick={handleMapClick}
         />
+        <LocateMeButton onLocate={(lat, lng) => setCenter([lat, lng])} />
 
         {spots.map(spot => (
           <Marker
