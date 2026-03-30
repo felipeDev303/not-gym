@@ -16,5 +16,10 @@ export default defineConfig({
     mode: 'standalone'
   }),
 
-  integrations: [react()]
+  integrations: [react()],
+  vite: {
+    ssr: {
+      noExternal: ['@supabase/ssr'],
+    },
+  },
 });
