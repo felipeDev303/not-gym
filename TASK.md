@@ -22,18 +22,17 @@ Lista de tareas granulares basada en el SDD y README.
 
 ## 1. Base de Datos (Supabase)
 
-- [ ] Habilitar extensión PostGIS en el proyecto de Supabase
-- [ ] Crear tabla `spot_categories` (id, slug, name, icon)
-- [ ] Crear tabla `spots` (id, name, description, category_id, location GEOGRAPHY, address, created_by, verified, created_at)
-- [ ] Crear tabla `spot_photos` (id, spot_id, url, uploaded_by, created_at)
-- [ ] Crear tabla `routes` (id, name, description, geojson, distance_km, created_by, created_at)
-- [ ] Crear función RPC `spots_near(lat, lng, radius)` con `ST_DWithin`
-- [ ] Crear índice espacial sobre `spots.location`
-- [ ] Insertar las 6 categorías iniciales (calistenia, pista_atletica, ruta_running, parque_fitness, cancha, escalada)
-- [ ] Configurar RLS en `spots`: lectura pública para `verified = true`, escritura solo para autenticados
-- [ ] Configurar RLS en `spot_photos`: lectura pública, escritura solo para autenticados
-- [ ] Configurar RLS en `routes`: lectura pública, escritura solo para autenticados
-- [ ] Crear bucket `spot-photos` en Supabase Storage (público)
+- [x] Ejecutar `supabase/schema.sql` en el SQL Editor de Supabase (cubre los ítems de abajo)
+  - [x] Habilitar extensión PostGIS
+  - [x] Crear tabla `spot_categories`
+  - [x] Crear tabla `spots`
+  - [x] Crear tabla `spot_photos`
+  - [x] Crear tabla `routes`
+  - [x] Crear función RPC `spots_near(lat, lng, radius)` con `ST_DWithin`
+  - [x] Crear índice espacial sobre `spots.location`
+  - [x] Insertar las 6 categorías iniciales
+  - [x] Configurar RLS en `spots`, `spot_photos` y `routes`
+- [x] Crear bucket `spot-photos` en Supabase Storage (manual: Dashboard → Storage → New bucket, Public: ON)
 
 ---
 
