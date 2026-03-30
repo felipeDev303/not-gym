@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { MapView } from '../../components/MapView'
+
+const session = !!Astro.locals.session
+---
+
+<Layout title="Mapa" fullHeight={true}>
+  <main id="map-page">
+    <MapView client:only="react" session={session} />
+  </main>
+</Layout>
+
+<style>
+  #map-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  #map-page > astro-island,
+  #map-page > astro-island > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+</style>

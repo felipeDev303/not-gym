@@ -69,63 +69,63 @@ Lista de tareas granulares basada en el SDD y README.
 
 ## 4. Páginas Astro
 
-- [ ] `/` — Landing page estática con descripción del proyecto y CTA al mapa
-- [ ] `/app/map` — Página contenedora que renderiza la isla React `MapView`
-- [ ] `/app/spots/[id]` — Página de detalle: nombre, descripción, categoría, dirección, galería de fotos, botón "Reportar"
-- [ ] `/app/submit` — Formulario de nuevo spot (protegida; recibe `?lat` y `?lng` pre-cargados desde el mapa)
-- [ ] `/login` — Página de autenticación
-- [ ] `/admin/spots` — Lista de spots pendientes (protegida por service role)
+- [x] `/` — Landing page con hero, tagline, CTA y pills de categorías
+- [x] `/app/map` — Contenedor del mapa (monta `MapView` via script dinámico)
+- [x] `/app/spots/[id]` — Detalle SSR: categoría, fotos, upload (auth), botón reportar
+- [x] `/app/submit` — Formulario protegido con `?lat/lng` pre-cargados, POST a `/api/spots`
+- [x] `/login` — Página de autenticación (completada en §2)
+- [x] `/admin/spots` — Panel de moderación: lista pendientes, aprobar/rechazar
+- [x] `src/layouts/Layout.astro` — Layout compartido con nav (sesión detectada)
 
 ---
 
 ## 5. Componente de Mapa (`MapView.tsx`)
 
-- [ ] Crear `MapView.tsx` como isla React (`client:only="react"`)
-- [ ] Inicializar `MapContainer` de Leaflet centrado en la ubicación del usuario (Geolocation API)
-- [ ] Agregar `TileLayer` con tiles de OpenStreetMap
-- [ ] Fetch inicial a `/api/spots` al montar el componente
-- [ ] Renderizar markers con icono custom según la categoría del spot
-- [ ] Al hacer click en un marker, mostrar `SpotCard` como popup (nombre, categoría, foto thumbnail, link a detalle)
-- [ ] Integrar `Leaflet Draw` para habilitar trazado de rutas de running
-- [ ] Al completar el trazado, calcular distancia con `Turf.js` y hacer POST a `/api/routes`
-- [ ] Renderizar rutas existentes como polylines sobre el mapa
-- [ ] Al hacer click en el mapa (sin marker), redirigir a `/app/submit?lat=...&lng=...` si el usuario está autenticado
+- [x] Crear `MapView.tsx` como isla React (`client:only="react"`)
+- [x] Inicializar `MapContainer` centrado en ubicación del usuario (Geolocation API, fallback BA)
+- [x] Agregar `TileLayer` con tiles de OpenStreetMap
+- [x] Fetch a `/api/spots` al montar y cuando cambian filtros/radio
+- [x] Markers con `DivIcon` personalizado por emoji de categoría
+- [x] Popup con `SpotCard` (nombre, categoría, dirección, link a detalle)
+- [x] Integrar `Leaflet Draw` (solo si autenticado) para trazar rutas
+- [x] Al terminar trazado: calcular distancia con `Turf.js`, prompt nombre, POST a `/api/routes`
+- [x] Renderizar rutas existentes como `Polyline` verde
+- [x] Click en mapa (autenticado) → redirige a `/app/submit?lat=&lng=`
+- [x] Botón flotante `+` (autenticado) para agregar spot desde el mapa
 
 ---
 
 ## 6. Componente `FilterBar.tsx`
 
-- [ ] Crear `FilterBar` con pills para cada categoría (slug + icono)
-- [ ] Al seleccionar una categoría, re-fetch `/api/spots?category=<slug>`
-- [ ] Agregar selector de radio de búsqueda (1 km / 5 km / 10 km)
-- [ ] Combinar filtro de categoría y radio en la misma query
-- [ ] Filtrado reactivo sin recarga de página
+- [x] Pills por categoría con estado activo; toggle al hacer click
+- [x] Re-fetch reactivo al cambiar categoría o radio
+- [x] Selector de radio: 1 km / 5 km / 10 km
+- [x] Filtrado sin recarga de página
 
 ---
 
 ## 7. Componente `SpotCard.tsx`
 
-- [ ] Crear `SpotCard` con nombre, icono de categoría y foto thumbnail
-- [ ] Mostrar link "Ver más" hacia `/app/spots/[id]`
+- [x] Nombre, icono de categoría, dirección y link "Ver más" a `/app/spots/[id]`
 
 ---
 
 ## 8. Página de Detalle de Spot
 
-- [ ] Mostrar nombre, descripción, categoría, dirección, creador y fecha
-- [ ] Galería de fotos con las imágenes del bucket `spot-photos`
-- [ ] Botón "Subir foto" visible solo para usuarios autenticados
-- [ ] Formulario de subida de foto (input file → POST a `/api/spots/[id]/photos`)
-- [ ] Botón "Reportar" (puede ser un mailto o un endpoint simple)
+- [x] Nombre, descripción, categoría, dirección y fecha (SSR en `/app/spots/[id].astro`)
+- [x] Galería de fotos del bucket `spot-photos`
+- [x] Botón "Subir foto" visible solo para autenticados
+- [x] Formulario de subida → `POST /api/spots/[id]/photos`
+- [x] Botón "Reportar" (mailto)
 
 ---
 
 ## 9. Panel de Moderación (Admin)
 
-- [ ] Página `/admin/spots` protegida: solo accesible con `SUPABASE_SERVICE_ROLE_KEY`
-- [ ] Listar todos los spots con `verified: false`
-- [ ] Botón "Aprobar" → `PUT /api/spots/[id]` con `{ verified: true }`
-- [ ] Botón "Rechazar" → `DELETE /api/spots/[id]`
+- [x] `/admin/spots` protegida; usa `createSupabaseAdminClient` (service role)
+- [x] Lista spots con `verified: false` ordenados por fecha
+- [x] Aprobar → `PUT /api/spots/[id]` `{ verified: true }` → remueve fila
+- [x] Rechazar → `DELETE /api/spots/[id]` → remueve fila
 
 ---
 

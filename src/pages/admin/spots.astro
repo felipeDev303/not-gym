@@ -1,0 +1,163 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { createSupabaseAdminClient } from '../../lib/supabase'
+
+const session = Astro.locals.session
+if (!session) return Astro.redirect('/login?redirect=/admin/spots')
+
+const admin = createSupabaseAdminClient()
+const { data: spots, error } = await admin
+  .from('spots')
+  .select(`
+    id, name, address, created_at,
+    spot_categories ( slug, name, icon )
+  `)
+  .eq('verified', false)
+  .order('created_at', { ascending: true })
+
+type PendingSpot = {
+  id: string
+  name: string
+  address: string | null
+  created_at: string
+  spot_categories: { slug: string; name: string; icon: string } | null
+}
+
+const pending = (spots ?? []) as unknown as PendingSpot[]
+---
+
+<Layout title="Moderación">
+  <main class="admin-page">
+    <div class="container">
+      <h1>Panel de Moderación</h1>
+      <p class="hint">{pending.length} spot{pending.length !== 1 ? 's' : ''} pendiente{pending.length !== 1 ? 's' : ''} de verificación</p>
+
+      {error && <div class="alert alert-error">{error.message}</div>}
+
+      {pending.length === 0 && (
+        <div class="empty">No hay spots pendientes. ✓</div>
+      )}
+
+      <ul class="spot-list">
+        {pending.map(spot => (
+          <li class="spot-item" id={`spot-${spot.id}`}>
+            <div class="spot-info">
+              <span class="category">
+                {spot.spot_categories?.icon} {spot.spot_categories?.name}
+              </span>
+              <a href={`/app/spots/${spot.id}`} target="_blank" class="spot-name">
+                {spot.name}
+              </a>
+              {spot.address && <span class="address">📍 {spot.address}</span>}
+              <span class="date">
+                {new Date(spot.created_at).toLocaleDateString('es-AR')}
+              </span>
+            </div>
+            <div class="spot-actions">
+              <button
+                class="btn btn-approve"
+                data-id={spot.id}
+                data-action="approve"
+              >
+                ✓ Aprobar
+              </button>
+              <button
+                class="btn btn-reject"
+                data-id={spot.id}
+                data-action="reject"
+              >
+                ✕ Rechazar
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  document.querySelectorAll('.spot-actions button').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const { id, action } = (btn as HTMLElement).dataset
+      if (!id) return
+
+      const row = document.getElementById(`spot-${id}`)
+
+      if (action === 'approve') {
+        const res = await fetch(`/api/spots/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ verified: true }),
+        })
+        if (res.ok) row?.remove()
+        else console.error(await res.json())
+      } else if (action === 'reject') {
+        const res = await fetch(`/api/spots/${id}`, { method: 'DELETE' })
+        if (res.ok || res.status === 204) row?.remove()
+        else console.error(await res.json())
+      }
+    })
+  })
+</script>
+
+<style>
+  .admin-page { padding: 2rem 1.5rem; }
+  .container { max-width: 800px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .hint { color: var(--muted); font-size: 0.875rem; margin-bottom: 1.75rem; }
+
+  .empty {
+    color: var(--muted);
+    padding: 2rem;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+  }
+
+  .spot-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .spot-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .spot-info { display: flex; flex-direction: column; gap: 0.2rem; }
+  .category { font-size: 0.78rem; color: var(--muted); }
+  .spot-name { font-weight: 600; font-size: 0.95rem; color: var(--text); }
+  .spot-name:hover { color: var(--accent); }
+  .address { font-size: 0.8rem; color: var(--muted); }
+  .date { font-size: 0.75rem; color: var(--muted); }
+
+  .spot-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+  .btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s;
+  }
+  .btn:hover { opacity: 0.8; }
+  .btn-approve { background: #166534; color: #bbf7d0; }
+  .btn-reject { background: #7f1d1d; color: #fecaca; }
+
+  .alert-error {
+    background: #3b0000;
+    border: 1px solid #7f1d1d;
+    color: #fca5a5;
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.25rem;
+  }
+</style>

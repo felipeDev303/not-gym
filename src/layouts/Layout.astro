@@ -1,0 +1,93 @@
+---
+interface Props {
+  title?: string
+  fullHeight?: boolean
+}
+const { title = 'NotGym', fullHeight = false } = Astro.props
+const session = Astro.locals.session
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>{title} — NotGym</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #f1f1f1;
+      --muted: #888;
+      --accent: #4ade80;
+      --danger: #f87171;
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body class={fullHeight ? 'full-height' : ''}>
+  <nav>
+    <a href="/" class="nav-logo">NotGym 🗺️</a>
+    <div class="nav-links">
+      <a href="/app/map">Mapa</a>
+      {session ? (
+        <form method="POST" action="/api/auth/logout" style="display:inline">
+          <button type="submit" class="nav-btn">Cerrar sesión</button>
+        </form>
+      ) : (
+        <a href="/login" class="nav-btn nav-btn-accent">Ingresar</a>
+      )}
+    </div>
+  </nav>
+
+  <slot />
+
+  <style>
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+    .nav-links { display: flex; align-items: center; gap: 1.25rem; }
+    .nav-links a { color: var(--muted); font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .nav-btn:hover { border-color: var(--text); color: var(--text); }
+    .nav-btn-accent {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0f0f0f;
+      font-weight: 600;
+    }
+    .nav-btn-accent:hover { opacity: 0.85; text-decoration: none; }
+    body.full-height { display: flex; flex-direction: column; }
+    body.full-height > :global(main) { flex: 1; }
+  </style>
+</body>
+</html>

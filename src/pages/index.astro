@@ -1,17 +1,89 @@
 ---
-
+import Layout from '../layouts/Layout.astro'
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Inicio">
+  <main class="hero">
+    <div class="hero-content">
+      <h1>El mejor gym es el<br/>que no te cobra.</h1>
+      <p class="subtitle">
+        NotGym es un mapa colaborativo para descubrir y contribuir
+        spots de entrenamiento al aire libre — zonas de calistenia,
+        pistas atléticas, rutas de running, parques fitness y más.
+      </p>
+      <div class="cta-group">
+        <a href="/app/map" class="btn btn-primary">Abrir el mapa</a>
+        <a href="/login" class="btn btn-outline">Contribuir un spot</a>
+      </div>
+      <div class="categories">
+        <span>🏋️ Calistenia</span>
+        <span>🏃 Pistas atléticas</span>
+        <span>🗺️ Rutas de running</span>
+        <span>🌳 Parques fitness</span>
+        <span>⚽ Canchas</span>
+        <span>🧗 Escalada</span>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 57px);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .hero-content { max-width: 640px; }
+  h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  .cta-group {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+  .btn {
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .btn:hover { opacity: 0.85; text-decoration: none; }
+  .btn-primary { background: var(--accent); color: #0f0f0f; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  .categories span {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+</style>
