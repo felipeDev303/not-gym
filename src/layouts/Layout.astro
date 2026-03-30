@@ -15,6 +15,7 @@ const session = Astro.locals.session
   <meta name="generator" content={Astro.generator} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>{title} — NotGym</title>
+  <slot name="head" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -38,7 +39,16 @@ const session = Astro.locals.session
 </head>
 <body class={fullHeight ? 'full-height' : ''}>
   <nav>
-    <a href="/" class="nav-logo">NotGym 🗺️</a>
+    <a href="/" class="nav-logo" aria-label="NotGym">
+      <svg height="22" viewBox="0 0 844.71 206.36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M162,8.61l-25.37,151.86h-33.75l-29.13-58.3c-7.93-15.95-12.94-28.56-15.04-37.83.15,2.23.22,3.97.22,5.23,0,4.15-.56,9.64-1.67,16.47l-12.47,74.44H7.8L33.17,8.61h40.9l16.68,35.16c11.57,24.33,19.09,42.32,22.58,53.96-.22-3.04-.33-5.31-.33-6.79,0-4.3,1-12.54,3-24.7l9.67-57.62h36.32Z" fill="currentColor"/>
+        <path d="M222.47,163.81c-15.65,0-28.8-4.65-39.44-13.96-10.64-9.31-15.97-22.01-15.97-38.1,0-19.36,6.17-35.27,18.52-47.73,12.35-12.46,27.94-18.69,46.78-18.69,17.21,0,30.87,4.88,41,14.63,10.12,9.75,15.19,21.79,15.19,36.1,0,21.29-6.51,37.9-19.52,49.84-13.02,11.94-28.54,17.91-46.56,17.91ZM224.25,136.44c7.79,0,13.07-5.79,15.85-17.36,2.78-11.57,4.17-21.25,4.17-29.04,0-11.87-4.3-17.8-12.91-17.8-7.64,0-12.92,5.92-15.85,17.75-2.93,11.83-4.39,21.49-4.39,28.98,0,11.65,4.38,17.47,13.13,17.47Z" fill="currentColor"/>
+        <path d="M382.84,48.11l-4.9,28.7h-20.31l-6.74,40.05c-.67,3.93-1.01,6.42-1.01,7.45,0,5.49,3.49,8.24,10.47,8.24,3.05,0,6.57-.45,10.58-1.33l-4.9,29.26c-8.01,1.71-15.69,2.56-23.03,2.56-9.12,0-15.89-1.15-20.3-3.45-4.41-2.3-8.01-5.56-10.79-9.79s-4.17-9.79-4.17-16.69c0-2.89.66-8.31,1.99-16.24l6.65-40.05h-15.43l4.78-28.7h15.49l6.2-33.27,40.78-.78-5.74,34.04h20.36Z" fill="currentColor"/>
+        <path d="M462.21,77.26h66.97l-13.91,83.22h-21.96l-1.33-16.69c-8.61,13.13-22.34,19.69-41.2,19.69-13.81,0-25.07-2.97-33.79-8.9-8.72-5.93-15.47-13.59-20.26-22.97-4.79-9.38-7.18-20.42-7.18-33.1,0-25.51,7.23-47.47,21.69-65.86,14.46-18.39,33.75-27.59,57.85-27.59,34.04,0,55.37,16.28,63.97,48.84l-41.72,6.79c-2.89-13.5-10.5-20.25-22.81-20.25-11.12,0-19.1,6.9-23.92,20.69-4.82,13.8-7.23,27.3-7.23,40.5,0,17.65,6.99,26.48,20.97,26.48,10.93,0,18.7-6.27,23.31-18.8h-24.92l5.45-32.04Z" fill="currentColor"/>
+        <path d="M658.97,48.11l-53.64,113.89c-7.88,16.68-15.95,27.29-24.22,31.83-8.26,4.54-18.1,6.81-29.51,6.81-5.71,0-11.64-.63-17.79-1.89l.11-30.15c9.45.96,16.49,1.45,21.11,1.45,11.54,0,17.31-3.08,17.31-9.25,0-1.56-.45-4-1.34-7.34l-27.17-105.34h44.75l9.59,45.17c1.71,7.64,2.64,12.46,2.79,14.46.74-1.41,1.59-3.3,2.56-5.67.74-2.08,1.67-4.23,2.78-6.45l22.27-47.51h30.41Z" fill="currentColor"/>
+        <path d="M672.04,48.11h38.24l-2.89,17.36c8.31-13.8,19.86-20.69,34.63-20.69s23.61,6.9,28.51,20.69c7.26-13.42,18.46-20.14,33.58-20.14,9.93,0,17.88,2.8,23.85,8.4,5.97,5.6,8.95,13.15,8.95,22.64,0,3.04-.33,6.71-1,11.01l-12.21,73.09h-42.75l11.24-66.64c.52-3.41.78-6.04.78-7.9,0-6.53-3-9.79-9-9.79-3.63,0-6.65,1.37-9.06,4.12-2.41,2.75-4.28,8.01-5.61,15.8l-10.8,64.41h-41.52l11.24-66.64c.67-4.08,1-6.97,1-8.68,0-3.41-.96-5.86-2.89-7.34-1.93-1.48-3.93-2.23-6-2.23s-4.67.87-7.78,2.62c-3.11,1.74-5.37,6.96-6.78,15.63l-11.25,66.64h-41.29l18.8-112.37Z" fill="currentColor"/>
+      </svg>
+    </a>
     <div class="nav-links">
       <a href="/app/map">Mapa</a>
       {session ? (
@@ -46,7 +56,7 @@ const session = Astro.locals.session
           <button type="submit" class="nav-btn">Cerrar sesión</button>
         </form>
       ) : (
-        <a href="/login" class="nav-btn nav-btn-accent">Ingresar</a>
+        <a href="/login" class="nav-link-cta">Ingresar →</a>
       )}
     </div>
   </nav>
@@ -65,7 +75,8 @@ const session = Astro.locals.session
       top: 0;
       z-index: 100;
     }
-    .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+    .nav-logo { display: flex; align-items: center; color: #b8bcc8; }
+    .nav-logo:hover { opacity: 0.7; text-decoration: none; }
     .nav-links { display: flex; align-items: center; gap: 1.25rem; }
     .nav-links a { color: var(--muted); font-size: 0.9rem; }
     .nav-links a:hover { color: var(--text); text-decoration: none; }
@@ -79,15 +90,16 @@ const session = Astro.locals.session
       cursor: pointer;
     }
     .nav-btn:hover { border-color: var(--text); color: var(--text); }
-    .nav-btn-accent {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #0f0f0f;
-      font-weight: 600;
-    }
-    .nav-btn-accent:hover { opacity: 0.85; text-decoration: none; }
+    .nav-link-cta { color: var(--text); font-size: 0.9rem; text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 1px; transition: border-color 0.15s; }
+    .nav-link-cta:hover { border-color: var(--text); text-decoration: none; }
     body.full-height { display: flex; flex-direction: column; }
     body.full-height > :global(main) { flex: 1; }
+    @media (max-width: 640px) {
+      nav { padding: 0.65rem 1rem; }
+      .nav-links { gap: 0.9rem; }
+      .nav-links a { font-size: 0.82rem; }
+      .nav-btn { padding: 0.3rem 0.65rem; font-size: 0.8rem; }
+    }
   </style>
 </body>
 </html>

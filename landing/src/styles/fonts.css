@@ -1,0 +1,62 @@
+/* Clases personalizadas para Inter siguiendo Material Design */
+.inter-light {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 300;
+}
+
+.inter-regular {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+.inter-medium {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
+}
+
+.inter-bold {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.inter-black {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 900;
+}
+
+/* Aplicar la fuente a elementos específicos siguiendo Material Design */
+.hero-title {
+  font-weight: 700;
+}
+
+.inter-black {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 900;
+}
+
+/* Aplicar la fuente a elementos específicos siguiendo Material Design */
+.hero-title {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.cta-button {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nav-link {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

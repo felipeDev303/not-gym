@@ -1,5 +1,5 @@
 /// <reference types="astro/client" />
-import { createServerClient, createBrowserClient, parseCookieHeader } from '@supabase/ssr'
+import { createServerClient, createBrowserClient } from '@supabase/ssr'
 import type { AstroCookies } from 'astro'
 
 export function createSupabaseServerClient(cookies: AstroCookies) {
@@ -8,16 +8,12 @@ export function createSupabaseServerClient(cookies: AstroCookies) {
     import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
-        getAll() {
-          return parseCookieHeader(cookies.toString() ?? '').filter(
-            (c): c is { name: string; value: string } => c.value !== undefined
-          )
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookies.set(name, value, options)
-          })
-        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        get(name: string) { return cookies.get(name)?.value },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        set(name: string, value: string, options: any) { cookies.set(name, value, options) },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        remove(name: string, options: any) { cookies.delete(name, options) },
       },
     }
   )

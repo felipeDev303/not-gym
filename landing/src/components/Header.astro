@@ -1,0 +1,97 @@
+---
+import FaviconIcon from './FaviconIcon.astro';
+const lang = 'es'; // fijo en español
+const t = {
+  about: 'Acerca de',
+  features: 'Características',
+  contact: 'Contacto',
+};
+---
+
+<header class="sticky top-0 z-50 bg-white shadow-md border-b border-gray-200 transition-all duration-300">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <!-- Logo SVG como componente -->
+      <a href="/" class="flex items-center" aria-label="Not Gym logo">
+        <FaviconIcon className="h-16 w-16" />
+      </a>
+
+      <!-- Botón hamburguesa -->
+      <button
+        id="hamburger-btn"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-primary hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        aria-label="Abrir menú"
+      >
+        <!-- Íconos intercambiables -->
+        <svg id="icon-open" class="h-6 w-6 block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="icon-close" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Navegación desktop -->
+      <nav class="hidden md:flex space-x-8" role="navigation" aria-label="Navegación principal">
+        <a href="#about" class="text-gray-700 hover:text-primary font-medium transition-colors duration-200">
+          {t.about}
+        </a>
+        <a href="#features" class="text-gray-700 hover:text-primary font-medium transition-colors duration-200">
+          {t.features}
+        </a>
+        <a href="#contact" class="text-gray-700 hover:text-primary font-medium transition-colors duration-200">
+          {t.contact}
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Menú móvil con animación -->
+  <div
+    id="mobile-menu"
+    class="overflow-hidden max-h-0 md:hidden transition-all duration-300 ease-in-out bg-white px-4 pb-4 pt-2 space-y-1 border-t border-gray-200 shadow-sm hidden"
+  >
+    <a href="#about" class="block text-gray-700 hover:text-primary font-medium transition-colors duration-200">
+      {t.about}
+    </a>
+    <a href="#features" class="block text-gray-700 hover:text-primary font-medium transition-colors duration-200">
+      {t.features}
+    </a>
+    <a href="#contact" class="block text-gray-700 hover:text-primary font-medium transition-colors duration-200">
+      {t.contact}
+    </a>
+  </div>
+</header>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('hamburger-btn');
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+
+    btn?.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', !isExpanded);
+
+      // Alternar íconos
+      iconOpen.classList.toggle('hidden', !isExpanded);
+      iconClose.classList.toggle('hidden', isExpanded);
+
+      // Alternar visibilidad y altura animada
+      if (!isExpanded) {
+        menu.classList.remove('hidden');
+        menu.classList.remove('max-h-0');
+        menu.classList.add('max-h-96');
+      } else {
+        menu.classList.remove('max-h-96');
+        menu.classList.add('max-h-0');
+        setTimeout(() => menu.classList.add('hidden'), 300); // Espera la animación antes de ocultar
+      }
+    });
+  });
+</script>

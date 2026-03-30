@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #4b94f2;
+    --primary-dark: #0378a6;
+    --primary-light: #04c4d9;
+    --accent: #ff8b01;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}

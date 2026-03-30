@@ -1,89 +1,281 @@
 ---
 import Layout from '../layouts/Layout.astro'
+
+const steps = [
+  { num: '01', title: 'Explora', desc: 'Abre el mapa y encuentra al instante espacios cerca de ti — parques con barras, pistas atléticas, rutas de running.' },
+  { num: '02', title: 'Entrena', desc: 'Llega al lugar, entrena con lo que el espacio ofrece. Sin membresías, sin horarios, sin límites.' },
+  { num: '03', title: 'Comparte', desc: 'Agrega nuevos spots al mapa y contribuye a que más personas descubran espacios públicos de calidad.' },
+]
+const socialLinks = [
+  { href: 'https://instagram.com/notgymorg',        label: 'Instagram',   svg: '<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>' },
+  { href: 'https://tiktok.com/@notgym.org',         label: 'TikTok',      svg: '<path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>' },
+  { href: 'https://x.com/NotGymOrg',                label: 'X',           svg: '<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>' },
+  { href: 'https://youtube.com/@NotGymOrg',         label: 'YouTube',     svg: '<path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/>' },
+  { href: 'mailto:notgym.org@gmail.com',            label: 'Email',       svg: '<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>' },
+]
 ---
 
-<Layout title="Inicio">
-  <main class="hero">
-    <div class="hero-content">
-      <h1>El mejor gym es el<br/>que no te cobra.</h1>
-      <p class="subtitle">
-        NotGym es un mapa colaborativo para descubrir y contribuir
-        spots de entrenamiento al aire libre — zonas de calistenia,
-        pistas atléticas, rutas de running, parques fitness y más.
+<Layout title="Tu Ciudad es tu Gimnasio — NotGym">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker">Mapa colaborativo de entrenamiento urbano</p>
+      <h1>Tu ciudad<br/><em>es tu gimnasio.</em></h1>
+      <p class="lead">
+        Descubre espacios públicos para entrenar — parques con barras, pistas atléticas,
+        rutas de running — mapeados por la comunidad. Gratis, para siempre.
       </p>
-      <div class="cta-group">
-        <a href="/app/map" class="btn btn-primary">Abrir el mapa</a>
-        <a href="/login" class="btn btn-outline">Contribuir un spot</a>
-      </div>
-      <div class="categories">
-        <span>🏋️ Calistenia</span>
-        <span>🏃 Pistas atléticas</span>
-        <span>🗺️ Rutas de running</span>
-        <span>🌳 Parques fitness</span>
-        <span>⚽ Canchas</span>
-        <span>🧗 Escalada</span>
+      <div class="hero-actions">
+        <a href="/app/map" class="link-cta">Abrir el mapa →</a>
+        <a href="/login" class="link-secondary">Contribuir un spot</a>
       </div>
     </div>
-  </main>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="section" id="features">
+    <div class="wrap-wide">
+      <p class="section-label">Cómo funciona</p>
+      <div class="steps">
+        {steps.map(s => (
+          <div class="step">
+            <span class="step-n">{s.num}</span>
+            <h3>{s.title}</h3>
+            <p>{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- MANIFIESTO -->
+  <section class="section section-manifesto" id="vision">
+    <div class="wrap">
+      <blockquote>
+        <p>
+          "La salud no debería depender de una membresía. NotGym.org existe para que
+          cualquier persona pueda encontrar un lugar donde moverse, sin costo y sin
+          excusas. Tu ciudad ya tiene lo que necesitas — solo hay que encontrarlo."
+        </p>
+      </blockquote>
+      <a href="/app/map" class="link-cta">Explorar el mapa →</a>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner wrap-wide">
+      <div class="footer-brand">
+        <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 844.71 206.36" fill="none" aria-label="NotGym">
+          <path d="M162,8.61l-25.37,151.86h-33.75l-29.13-58.3c-7.93-15.95-12.94-28.56-15.04-37.83.15,2.23.22,3.97.22,5.23,0,4.15-.56,9.64-1.67,16.47l-12.47,74.44H7.8L33.17,8.61h40.9l16.68,35.16c11.57,24.33,19.09,42.32,22.58,53.96-.22-3.04-.33-5.31-.33-6.79,0-4.3,1-12.54,3-24.7l9.67-57.62h36.32Z" fill="currentColor"/>
+          <path d="M222.47,163.81c-15.65,0-28.8-4.65-39.44-13.96-10.64-9.31-15.97-22.01-15.97-38.1,0-19.36,6.17-35.27,18.52-47.73,12.35-12.46,27.94-18.69,46.78-18.69,17.21,0,30.87,4.88,41,14.63,10.12,9.75,15.19,21.79,15.19,36.1,0,21.29-6.51,37.9-19.52,49.84-13.02,11.94-28.54,17.91-46.56,17.91ZM224.25,136.44c7.79,0,13.07-5.79,15.85-17.36,2.78-11.57,4.17-21.25,4.17-29.04,0-11.87-4.3-17.8-12.91-17.8-7.64,0-12.92,5.92-15.85,17.75-2.93,11.83-4.39,21.49-4.39,28.98,0,11.65,4.38,17.47,13.13,17.47Z" fill="currentColor"/>
+          <path d="M382.84,48.11l-4.9,28.7h-20.31l-6.74,40.05c-.67,3.93-1.01,6.42-1.01,7.45,0,5.49,3.49,8.24,10.47,8.24,3.05,0,6.57-.45,10.58-1.33l-4.9,29.26c-8.01,1.71-15.69,2.56-23.03,2.56-9.12,0-15.89-1.15-20.3-3.45-4.41-2.3-8.01-5.56-10.79-9.79s-4.17-9.79-4.17-16.69c0-2.89.66-8.31,1.99-16.24l6.65-40.05h-15.43l4.78-28.7h15.49l6.2-33.27,40.78-.78-5.74,34.04h20.36Z" fill="currentColor"/>
+          <path d="M462.21,77.26h66.97l-13.91,83.22h-21.96l-1.33-16.69c-8.61,13.13-22.34,19.69-41.2,19.69-13.81,0-25.07-2.97-33.79-8.9-8.72-5.93-15.47-13.59-20.26-22.97-4.79-9.38-7.18-20.42-7.18-33.1,0-25.51,7.23-47.47,21.69-65.86,14.46-18.39,33.75-27.59,57.85-27.59,34.04,0,55.37,16.28,63.97,48.84l-41.72,6.79c-2.89-13.5-10.5-20.25-22.81-20.25-11.12,0-19.1,6.9-23.92,20.69-4.82,13.8-7.23,27.3-7.23,40.5,0,17.65,6.99,26.48,20.97,26.48,10.93,0,18.7-6.27,23.31-18.8h-24.92l5.45-32.04Z" fill="currentColor"/>
+          <path d="M658.97,48.11l-53.64,113.89c-7.88,16.68-15.95,27.29-24.22,31.83-8.26,4.54-18.1,6.81-29.51,6.81-5.71,0-11.64-.63-17.79-1.89l.11-30.15c9.45.96,16.49,1.45,21.11,1.45,11.54,0,17.31-3.08,17.31-9.25,0-1.56-.45-4-1.34-7.34l-27.17-105.34h44.75l9.59,45.17c1.71,7.64,2.64,12.46,2.79,14.46.74-1.41,1.59-3.3,2.56-5.67.74-2.08,1.67-4.23,2.78-6.45l22.27-47.51h30.41Z" fill="currentColor"/>
+          <path d="M672.04,48.11h38.24l-2.89,17.36c8.31-13.8,19.86-20.69,34.63-20.69s23.61,6.9,28.51,20.69c7.26-13.42,18.46-20.14,33.58-20.14,9.93,0,17.88,2.8,23.85,8.4,5.97,5.6,8.95,13.15,8.95,22.64,0,3.04-.33,6.71-1,11.01l-12.21,73.09h-42.75l11.24-66.64c.52-3.41.78-6.04.78-7.9,0-6.53-3-9.79-9-9.79-3.63,0-6.65,1.37-9.06,4.12-2.41,2.75-4.28,8.01-5.61,15.8l-10.8,64.41h-41.52l11.24-66.64c.67-4.08,1-6.97,1-8.68,0-3.41-.96-5.86-2.89-7.34-1.93-1.48-3.93-2.23-6-2.23s-4.67.87-7.78,2.62c-3.11,1.74-5.37,6.96-6.78,15.63l-11.25,66.64h-41.29l18.8-112.37Z" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="footer-links">
+        <a href="#features">Cómo funciona</a>
+        <a href="#vision">Manifiesto</a>
+        <a href="/app/map">Mapa</a>
+        <a href="/login">Ingresar</a>
+      </div>
+      <div class="footer-social">
+        {socialLinks.map(s => (
+          <a href={s.href} target={s.label === 'Email' ? '_self' : '_blank'} rel="noopener noreferrer" aria-label={s.label}>
+            <svg viewBox="0 0 24 24" fill="currentColor" set:html={s.svg} />
+          </a>
+        ))}
+      </div>
+    </div>
+    <div class="footer-copy wrap-wide">
+      © {new Date().getFullYear()} NotGym.org
+    </div>
+  </footer>
+
 </Layout>
 
 <style>
+  /* ── Monotype Corsiva local fonts ── */
+  @font-face {
+    font-family: 'Monotype Corsiva';
+    src: url('/Monotype-Corsiva-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Monotype Corsiva';
+    src: url('/Monotype-Corsiva-Regular-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Monotype Corsiva';
+    src: url('/Monotype-Corsiva-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Monotype Corsiva';
+    src: url('/Monotype-Corsiva-Bold-Italic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  /* ── Base ── */
+  .wrap      { max-width: 680px; margin-inline: auto; padding-inline: 1.5rem; }
+  .wrap-wide { max-width: 960px; margin-inline: auto; padding-inline: 1.5rem; }
+
+  /* ── Corsiva: todos los títulos y display ── */
+  h1, h2, .step h3, blockquote p {
+    font-family: 'Monotype Corsiva', 'Apple Chancery', 'Segoe Script', cursive;
+  }
+
+  /* ── Hero ── */
   .hero {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     min-height: calc(100vh - 57px);
-    padding: 2rem 1.5rem;
+    padding: 5rem 0;
     text-align: center;
   }
-  .hero-content { max-width: 640px; }
+  .kicker {
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2rem;
+  }
   h1 {
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 1.25rem;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 400; line-height: 1.08;
+    color: var(--text); margin-bottom: 1.75rem;
   }
-  .subtitle {
-    color: var(--muted);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
+  h1 em { font-style: italic; color: var(--text); }
+  .lead {
+    font-size: 1.05rem; line-height: 1.75; color: var(--muted);
+    max-width: 520px; margin-inline: auto; margin-bottom: 2.5rem;
   }
-  .cta-group {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 2.5rem;
+  .hero-actions {
+    display: flex; align-items: center; gap: 2rem;
+    justify-content: center; flex-wrap: wrap;
   }
-  .btn {
-    padding: 0.7rem 1.5rem;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
+  .link-cta {
+    font-size: 0.9rem; color: var(--text);
     text-decoration: none;
+    border-bottom: 1px solid var(--text);
+    padding-bottom: 1px;
     transition: opacity 0.15s;
   }
-  .btn:hover { opacity: 0.85; text-decoration: none; }
-  .btn-primary { background: var(--accent); color: #0f0f0f; }
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
+  .link-cta:hover { opacity: 0.6; text-decoration: none; }
+  .link-secondary {
+    font-size: 0.88rem; color: var(--muted);
+    text-decoration: none; transition: color 0.15s;
   }
-  .categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
+  .link-secondary:hover { color: var(--text); text-decoration: none; }
+
+  /* ── Divider ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ── Sections ── */
+  .section { padding: 5rem 0; }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 3rem; text-align: center;
   }
-  .categories span {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.3rem 0.85rem;
-    font-size: 0.85rem;
-    color: var(--muted);
+
+  /* ── Steps ── */
+  .steps {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 3rem 2rem;
+  }
+  .step { display: flex; flex-direction: column; }
+  .step-n {
+    display: block; font-size: 0.68rem; letter-spacing: 0.12em;
+    color: var(--muted); margin-bottom: 0.75rem;
+  }
+  .step h3 {
+    font-size: 1.4rem; font-weight: 400; font-style: italic;
+    margin-bottom: 0.6rem; color: var(--text);
+  }
+  .step p { font-size: 0.88rem; line-height: 1.7; color: var(--muted); }
+
+  /* ── Manifesto ── */
+  .section-manifesto { text-align: center; }
+  blockquote {
+    margin: 0 0 2.5rem;
+    padding: 0;
+    border: none;
+  }
+  blockquote p {
+    font-size: clamp(1.3rem, 3vw, 1.85rem);
+    font-style: italic; font-weight: 400;
+    line-height: 1.55; color: var(--text);
+    max-width: 600px; margin-inline: auto;
+  }
+
+  /* ── Footer ── */
+  footer { padding: 2.5rem 0 1.5rem; border-top: 1px solid var(--border); }
+  .footer-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem;
+  }
+  .logo-svg { width: 90px; height: auto; color: #b8bcc8; display: block; }
+  .footer-links { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.82rem; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+  .footer-links a:hover { color: var(--text); }
+  .footer-social { display: flex; gap: 0.75rem; align-items: center; }
+  .footer-social a { color: var(--muted); transition: color 0.15s; }
+  .footer-social a:hover { color: var(--text); }
+  .footer-social svg { width: 16px; height: 16px; display: block; }
+  .footer-copy {
+    font-size: 0.75rem; color: var(--muted);
+    padding-top: 1.25rem; border-top: 1px solid var(--border);
+  }
+
+  /* ── Responsive mobile ── */
+  @media (max-width: 640px) {
+    .hero {
+      min-height: auto;
+      padding: 4rem 0 3rem;
+    }
+    h1 {
+      font-size: clamp(2.4rem, 11vw, 3rem);
+    }
+    .lead {
+      font-size: 0.95rem;
+    }
+    .hero-actions {
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .section {
+      padding: 3.5rem 0;
+    }
+    .steps {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    blockquote p {
+      font-size: clamp(1.15rem, 5vw, 1.4rem);
+    }
+    .footer-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .footer-links {
+      flex-direction: column;
+      gap: 0.6rem;
+    }
   }
 </style>
