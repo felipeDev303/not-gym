@@ -42,12 +42,11 @@ type MapControlsProps = {
   onMapClick: (lat: number, lng: number) => void
 }
 
-function LocateMeButton({ onLocate }: { onLocate: (lat: number, lng: number) => void }) {
-  const map = useMap()
+function LocateMeButton({ mapRef, onLocate }: { mapRef: React.RefObject<L.Map | null>, onLocate: (lat: number, lng: number) => void }) {
   const handleClick = () => {
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        map.setView([coords.latitude, coords.longitude], 15)
+        mapRef.current?.setView([coords.latitude, coords.longitude], 15)
         onLocate(coords.latitude, coords.longitude)
       },
       () => alert('No se pudo obtener tu ubicación. Verificá los permisos del browser.'),
@@ -58,7 +57,7 @@ function LocateMeButton({ onLocate }: { onLocate: (lat: number, lng: number) => 
     width: 44, height: 44, borderRadius: '50%',
     background: '#1a1a1a',
     border: '1.5px solid #2a2a2a',
-    color: '#f1f1f1', fontSize: '1.1rem', cursor: 'pointer',
+    color: '#f1f1f1', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
     transition: 'border-color 0.15s, color 0.15s',
@@ -140,6 +139,7 @@ export function MapView({ session }: { session: boolean }) {
   const [radius, setRadius] = useState(5000)
   const [center, setCenter] = useState<[number, number]>([41.3851, 2.1734])
   const [ready, setReady] = useState(false)
+  const mapRef = useRef<L.Map | null>(null)
 
   // Geolocation
   useEffect(() => {
@@ -218,6 +218,7 @@ export function MapView({ session }: { session: boolean }) {
         center={center}
         zoom={14}
         style={{ flex: 1, minHeight: 0 }}
+        ref={mapRef}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -229,7 +230,6 @@ export function MapView({ session }: { session: boolean }) {
           onRouteCreated={handleRouteCreated}
           onMapClick={handleMapClick}
         />
-        <LocateMeButton onLocate={(lat, lng) => setCenter([lat, lng])} />
 
         {spots.map(spot => (
           <Marker
@@ -258,6 +258,8 @@ export function MapView({ session }: { session: boolean }) {
           )
         })}
       </MapContainer>
+
+      <LocateMeButton mapRef={mapRef} onLocate={(lat, lng) => setCenter([lat, lng])} />
 
       {session && (
         <div style={{
