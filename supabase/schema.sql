@@ -102,8 +102,16 @@ INSERT INTO spot_categories (slug, name, icon) VALUES
   ('pista_atletica',  'Pista Atlética',         '🏃'),
   ('ruta_running',    'Ruta de Running',        '🗺️'),
   ('parque_fitness',  'Parque Fitness',         '🌳'),
-  ('cancha',          'Cancha Polideportiva',   '⚽'),
-  ('escalada',        'Zona de Escalada',       '🧗');
+  ('cancha',          'Cancha Polideportiva',   '🏟️'),
+  ('escalada',        'Zona de Escalada',       '🧗'),
+  ('skateboarding',   'Skateboarding',          '🛹'),
+  ('bicicleta',       'Ciclismo',               '🚴'),
+  ('tenis',           'Tenis',                  '🎾'),
+  ('futbol',          'Fútbol',                 '⚽'),
+  ('baloncesto',      'Baloncesto',             '🏀'),
+  ('ajedrez',         'Ajedrez',                '♟️'),
+  ('patines',         'Patinaje',               '🛼'),
+  ('parkour',         'Parkour',                '🤸');
 
 
 -- ------------------------------------------------------------

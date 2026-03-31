@@ -13,8 +13,16 @@ const CATEGORIES = [
   { slug: 'pista_atletica', name: 'Pista Atlética', icon: '🏃' },
   { slug: 'ruta_running',   name: 'Running',        icon: '🗺️' },
   { slug: 'parque_fitness', name: 'Parque Fitness', icon: '🌳' },
-  { slug: 'cancha',         name: 'Canchas',        icon: '⚽' },
+  { slug: 'cancha',         name: 'Canchas',        icon: '🏟️' },
   { slug: 'escalada',       name: 'Escalada',       icon: '🧗' },
+  { slug: 'skateboarding',  name: 'Skateboarding',  icon: '🛹' },
+  { slug: 'bicicleta',      name: 'Ciclismo',       icon: '🚴' },
+  { slug: 'tenis',          name: 'Tenis',          icon: '🎾' },
+  { slug: 'futbol',         name: 'Fútbol',         icon: '⚽' },
+  { slug: 'baloncesto',     name: 'Baloncesto',     icon: '🏀' },
+  { slug: 'ajedrez',        name: 'Ajedrez',        icon: '♟️' },
+  { slug: 'patines',        name: 'Patinaje',       icon: '🛼' },
+  { slug: 'parkour',        name: 'Parkour',        icon: '🤸' },
 ]
 
 type Route = {
