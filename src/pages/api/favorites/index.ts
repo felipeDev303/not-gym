@@ -1,8 +1,13 @@
 import type { APIRoute } from 'astro'
-import { createSupabaseAdminClient } from '../../../lib/supabase'
+import { createSupabaseAdminClient, createSupabaseServerClient } from '../../../lib/supabase'
 
-export const GET: APIRoute = async ({ locals }) => {
-  const session = locals.session
+export const GET: APIRoute = async ({ locals, request, cookies }) => {
+  let session = locals.session
+  if (!session) {
+    const supabase = createSupabaseServerClient({ request, cookies })
+    const { data } = await supabase.auth.getSession()
+    session = data.session
+  }
   if (!session) return new Response(JSON.stringify([]), { status: 200 })
   const supabase = createSupabaseAdminClient()
   const { data, error } = await supabase
