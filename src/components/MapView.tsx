@@ -301,7 +301,10 @@ export function MapView({ session }: { session: boolean }) {
     }
   }, [])
 
+  const skipNextMapClick = useRef(false)
+
   const handleMapClick = useCallback((lat: number, lng: number) => {
+    if (skipNextMapClick.current) { skipNextMapClick.current = false; return }
     window.location.href = `/app/submit?lat=${lat.toFixed(6)}&lng=${lng.toFixed(6)}`
   }, [])
 
@@ -319,6 +322,7 @@ export function MapView({ session }: { session: boolean }) {
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <LocationSearch onSelect={(lat, lng) => {
+        skipNextMapClick.current = true
         mapRef.current?.setView([lat, lng], 13)
         setCenter([lat, lng])
       }} />
