@@ -135,6 +135,7 @@ function MapControls({ session, onRouteCreated, onMapClick }: MapControlsProps) 
 export function MapView({ session }: { session: boolean }) {
   const [spots, setSpots] = useState<Spot[]>([])
   const [routes, setRoutes] = useState<Route[]>([])
+  const [favorites, setFavorites] = useState<Set<string>>(new Set())
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [radius, setRadius] = useState(5000)
   const [center, setCenter] = useState<[number, number]>([41.3851, 2.1734])
@@ -167,6 +168,15 @@ export function MapView({ session }: { session: boolean }) {
       .then(data => setSpots(Array.isArray(data) ? data : []))
       .catch(() => setSpots([]))
   }, [ready, center, radius, activeCategory])
+
+  // Fetch favorites once (only when logged in)
+  useEffect(() => {
+    if (!session) return
+    fetch('/api/favorites')
+      .then(r => r.json())
+      .then(data => setFavorites(new Set(Array.isArray(data) ? data : [])))
+      .catch(() => {})
+  }, [session])
 
   // Fetch routes once
   useEffect(() => {
@@ -238,7 +248,7 @@ export function MapView({ session }: { session: boolean }) {
             icon={createIcon(spot.category_icon)}
           >
             <Popup minWidth={190} maxWidth={260}>
-              <SpotCard spot={spot} />
+              <SpotCard spot={spot} isFavorite={favorites.has(spot.id)} session={session} />
             </Popup>
           </Marker>
         ))}
