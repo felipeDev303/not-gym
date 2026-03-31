@@ -6,6 +6,8 @@ NotGym es un mapa colaborativo para descubrir y contribuir spots de entrenamient
 
 **En vivo:** [notgym.org](https://notgym.org)
 
+![Landing](public/landing.gif)
+
 ---
 
 ## Funcionalidades
@@ -13,9 +15,23 @@ NotGym es un mapa colaborativo para descubrir y contribuir spots de entrenamient
 - **Mapa interactivo** — Explorá spots verificados cerca tuyo, filtrados por categoría de entrenamiento
 - **Páginas de detalle** — Fotos, descripción, dirección e información del contribuidor
 - **Contribuir spots** — Los usuarios autenticados pueden agregar nuevos spots al mapa
+- **Favoritos** — Guardá y revisá tus spots favoritos desde cualquier dispositivo
 - **Subida de fotos** — Agregá fotos a cualquier spot existente
 - **Rutas de running** — Trazá y guardá rutas directamente en el mapa con cálculo automático de distancia
 - **Moderación** — Panel de admin para aprobar o rechazar spots enviados
+
+---
+
+## Demo
+
+### Crear un spot
+![Crear spot](public/crearspot.gif)
+
+### Guardar favoritos
+![Favoritos](public/favoritos.gif)
+
+### Moderación (admin)
+![Aceptar spot](public/aceptarspot.gif)
 
 ---
 
@@ -62,7 +78,7 @@ PUBLIC_APP_URL=https://notgym.org
 
 ### Configuración de la Base de Datos
 
-Ejecuta el esquema SQL en el editor SQL de Supabase (ver [`SDD.md §5.2`](./SDD.md#52-esquema-de-base-de-datos)) y cargá las categorías iniciales desde [`SDD.md §5.4`](./SDD.md#54-datos-iniciales--categorías).
+Ejecutá el esquema SQL en el editor SQL de Supabase usando el archivo [`supabase/schema.sql`](./supabase/schema.sql).
 
 ### Servidor de Desarrollo
 
@@ -103,25 +119,26 @@ src/
 │   ├── index.astro              # Landing page
 │   ├── app/
 │   │   ├── map.astro            # Mapa interactivo
+│   │   ├── favorites.astro      # Spots favoritos
 │   │   ├── spots/[id].astro     # Detalle de spot
 │   │   └── submit.astro         # Formulario de nuevo spot
+│   ├── admin/
+│   │   └── spots.astro          # Panel de moderación
 │   └── api/
-│       ├── spots.ts
-│       ├── spots/[id].ts
-│       ├── spots/[id]/photos.ts
-│       └── routes.ts
-└── components/
-    ├── MapView.tsx               # Isla React (client:only)
-    ├── SpotCard.tsx
-    └── FilterBar.tsx
+│       ├── spots/               # CRUD de spots
+│       ├── favorites/           # Favoritos del usuario
+│       ├── routes/              # Rutas de running
+│       └── auth/                # Login / logout
+├── components/
+│   ├── MapView.tsx              # Isla React (client:only)
+│   ├── SpotCard.tsx
+│   └── FilterBar.tsx
+├── layouts/
+│   └── Layout.astro
+├── lib/
+│   └── supabase.ts
+└── middleware.ts
 ```
-
----
-
-## Documentación
-
-- [`SDD.md`](./SDD.md) — Documento de Diseño de Software completo (arquitectura, modelo de datos, API, seguridad)
-- [`notgym-arquitectura.md`](./notgym-arquitectura.md) — Notas de arquitectura originales
 
 ---
 
