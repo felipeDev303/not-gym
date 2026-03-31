@@ -323,6 +323,7 @@ export function MapView({ session }: { session: boolean }) {
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <LocationSearch onSelect={(lat, lng) => {
         skipNextMapClick.current = true
+        setTimeout(() => { skipNextMapClick.current = false }, 800)
         mapRef.current?.setView([lat, lng], 13)
         setCenter([lat, lng])
       }} />
