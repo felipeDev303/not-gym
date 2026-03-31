@@ -35,50 +35,42 @@ export function SpotCard({ spot, isFavorite = false, session = false }: { spot: 
 
   return (
     <div style={{ minWidth: 180, fontFamily: 'system-ui, sans-serif' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem' }}>
-        <div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginBottom: '0.25rem' }}>
-            {(spot.category_icons ?? [spot.category_icon]).map((icon, i) => (
-              <span key={i} style={{ fontSize: '0.72rem', color: '#888' }}>
-                {icon} {(spot.category_slugs ?? [spot.category_slug])[i]?.replace(/_/g, ' ')}
-              </span>
-            ))}
-          </div>
-          <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#f1f1f1', marginBottom: '0.25rem' }}>
-            {spot.name}
-          </div>
-        </div>
-        {session && (
-          <button
-            onClick={toggleFav}
-            title={fav ? 'Quitar de favoritos' : 'Guardar en favoritos'}
-            style={{
-              background: 'none', border: 'none', cursor: loading ? 'default' : 'pointer',
-              fontSize: '1rem', padding: '0', lineHeight: 1, opacity: loading ? 0.5 : 1,
-              flexShrink: 0, marginTop: '0.1rem',
-            }}
-          >
-            {fav ? '♥' : '♡'}
-          </button>
-        )}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginBottom: '0.25rem' }}>
+        {(spot.category_icons ?? [spot.category_icon]).map((icon, i) => (
+          <span key={i} style={{ fontSize: '0.72rem', color: '#888' }}>
+            {icon} {(spot.category_slugs ?? [spot.category_slug])[i]?.replace(/_/g, ' ')}
+          </span>
+        ))}
+      </div>
+      <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#f1f1f1', marginBottom: '0.25rem' }}>
+        {spot.name}
       </div>
       {spot.address && (
         <div style={{ fontSize: '0.78rem', color: '#888', marginBottom: '0.5rem' }}>
           📍 {spot.address}
         </div>
       )}
-      <a
-        href={`/app/spots/${spot.id}`}
-        style={{
-          display: 'inline-block',
-          fontSize: '0.8rem',
-          color: '#4ade80',
-          textDecoration: 'none',
-          marginTop: '0.2rem',
-        }}
-      >
-        Ver más →
-      </a>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.4rem' }}>
+        <a
+          href={`/app/spots/${spot.id}`}
+          style={{ fontSize: '0.8rem', color: '#4ade80', textDecoration: 'none' }}
+        >
+          Ver más →
+        </a>
+        {session && (
+          <button
+            onClick={toggleFav}
+            title={fav ? 'Quitar de favoritos' : 'Guardar en favoritos'}
+            style={{
+              background: 'none', border: 'none', cursor: loading ? 'default' : 'pointer',
+              fontSize: '1.1rem', padding: '0 0.1rem', lineHeight: 1,
+              opacity: loading ? 0.5 : 1, color: fav ? '#f87171' : '#888',
+            }}
+          >
+            {fav ? '♥' : '♡'}
+          </button>
+        )}
+      </div>
     </div>
   )
 }
