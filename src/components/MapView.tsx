@@ -18,6 +18,15 @@ function LocationSearch({ onSelect }: { onSelect: (lat: number, lng: number, lab
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [dropPos, setDropPos] = useState<{ top: number; left: number; width: number } | null>(null)
+
+  const updateDropPos = () => {
+    if (containerRef.current) {
+      const r = containerRef.current.getBoundingClientRect()
+      setDropPos({ top: r.bottom + window.scrollY, left: r.left, width: r.width })
+    }
+  }
 
   const search = (q: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -31,7 +40,7 @@ function LocationSearch({ onSelect }: { onSelect: (lat: number, lng: number, lab
         )
         const data: GeoResult[] = await res.json()
         setResults(data)
-        setOpen(data.length > 0)
+        if (data.length > 0) { updateDropPos(); setOpen(true) } else { setOpen(false) }
       } catch { setResults([]) }
       finally { setLoading(false) }
     }, 400)
@@ -45,44 +54,45 @@ function LocationSearch({ onSelect }: { onSelect: (lat: number, lng: number, lab
   }
 
   return (
-    <div style={{ position: 'relative', padding: '0.5rem 0.75rem', background: '#111', borderBottom: '1px solid #2a2a2a' }}>
+    <div ref={containerRef} style={{ padding: '0.5rem 0.75rem', background: '#111', borderBottom: '1px solid #2a2a2a' }}>
       <div style={{ display: 'flex', alignItems: 'center', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 8, padding: '0.4rem 0.75rem', gap: '0.5rem' }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
         <input
           type="text"
+          inputMode="search"
           value={query}
           placeholder="Buscar ciudad o lugar..."
           onChange={e => { setQuery(e.target.value); search(e.target.value) }}
-          onBlur={() => setTimeout(() => setOpen(false), 150)}
+          onFocus={updateDropPos}
+          onBlur={() => setTimeout(() => setOpen(false), 250)}
           style={{
             flex: 1, background: 'none', border: 'none', outline: 'none',
-            color: '#f1f1f1', fontSize: '0.875rem', fontFamily: 'system-ui, sans-serif',
+            color: '#f1f1f1', fontSize: '16px', fontFamily: 'system-ui, sans-serif',
           }}
         />
         {loading && <span style={{ fontSize: '0.75rem', color: '#888' }}>...</span>}
         {query && !loading && (
-          <button onClick={() => { setQuery(''); setResults([]); setOpen(false) }}
+          <button onPointerDown={() => { setQuery(''); setResults([]); setOpen(false) }}
             style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '1rem', padding: 0, lineHeight: 1 }}>✕</button>
         )}
       </div>
-      {open && (
+      {open && dropPos && (
         <ul style={{
-          position: 'absolute', top: '100%', left: '0.75rem', right: '0.75rem', zIndex: 2000,
+          position: 'fixed', top: dropPos.top, left: dropPos.left, width: dropPos.width,
+          zIndex: 9999,
           background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 8,
           margin: 0, padding: '0.25rem 0', listStyle: 'none',
           boxShadow: '0 4px 16px rgba(0,0,0,0.5)', maxHeight: 220, overflowY: 'auto',
         }}>
           {results.map((r, i) => (
             <li key={i}
-              onMouseDown={() => handleSelect(r)}
+              onPointerDown={() => handleSelect(r)}
               style={{
-                padding: '0.5rem 0.85rem', cursor: 'pointer', fontSize: '0.825rem',
+                padding: '0.5rem 0.85rem', cursor: 'pointer', fontSize: '0.875rem',
                 color: '#f1f1f1', borderBottom: i < results.length - 1 ? '1px solid #2a2a2a' : 'none',
               }}
-              onMouseEnter={e => (e.currentTarget.style.background = '#252525')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
             >
               {r.display_name}
             </li>
