@@ -2,9 +2,22 @@
 interface Props {
   title?: string
   fullHeight?: boolean
+  description?: string
+  ogImage?: string
+  canonicalUrl?: string
 }
-const { title = 'NotGym', fullHeight = false } = Astro.props
+const {
+  title = 'NotGym',
+  fullHeight = false,
+  description = 'Mapa colaborativo para descubrir espacios de entrenamiento urbano gratuito: parques con barras, pistas atléticas y rutas de running.',
+  ogImage = '/og.svg',
+  canonicalUrl,
+} = Astro.props
 const session = Astro.locals.session
+const siteUrl = 'https://notgym.org'
+const pageUrl = canonicalUrl ?? siteUrl
+const fullTitle = title === 'NotGym' ? 'NotGym — Tu Ciudad es tu Gimnasio' : `${title} — NotGym`
+const ogImageAbs = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
 ---
 
 <!DOCTYPE html>
@@ -13,8 +26,33 @@ const session = Astro.locals.session
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="generator" content={Astro.generator} />
+  <meta name="description" content={description} />
+  <link rel="canonical" href={pageUrl} />
+
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <title>{title} — NotGym</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="NotGym" />
+  <meta property="og:url" content={pageUrl} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImageAbs} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="es_AR" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@NotGymOrg" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageAbs} />
+
+  <title>{fullTitle}</title>
   <slot name="head" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
