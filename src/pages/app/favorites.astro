@@ -18,17 +18,17 @@ type FavSpot = {
   id: string
   name: string
   address: string | null
-  spot_categories: { name: string; icon: string } | null
+  spot_tags: { spot_categories: { name: string; icon: string } }[]
 }
 
 let spots: FavSpot[] = []
 if (spotIds.length > 0) {
   const { data } = await admin
     .from('spots')
-    .select('id, name, address, spot_categories ( name, icon )')
+    .select('id, name, address, spot_tags ( spot_categories ( name, icon ) )')
     .in('id', spotIds)
     .eq('verified', true)
-  spots = (data ?? []) as FavSpot[]
+  spots = (data ?? []) as unknown as FavSpot[]
 }
 ---
 
@@ -45,7 +45,9 @@ if (spotIds.length > 0) {
           {spots.map(spot => (
             <li class="spot-item">
               <div class="spot-meta">
-                <span class="badge">{spot.spot_categories?.icon} {spot.spot_categories?.name}</span>
+                {spot.spot_tags?.map(t => (
+                  <span class="badge">{t.spot_categories?.icon} {t.spot_categories?.name}</span>
+                ))}
               </div>
               <div class="spot-row">
                 <div>
