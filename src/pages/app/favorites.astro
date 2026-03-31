@@ -1,0 +1,123 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { createSupabaseAdminClient, createSupabaseServerClient } from '../../lib/supabase'
+
+const session = Astro.locals.session
+if (!session) return Astro.redirect('/login')
+
+const admin = createSupabaseAdminClient()
+
+const { data: favRows } = await admin
+  .from('spot_favorites')
+  .select('spot_id')
+  .eq('user_id', session.user.id)
+
+const spotIds = (favRows ?? []).map(r => r.spot_id)
+
+type FavSpot = {
+  id: string
+  name: string
+  address: string | null
+  spot_categories: { name: string; icon: string } | null
+}
+
+let spots: FavSpot[] = []
+if (spotIds.length > 0) {
+  const { data } = await admin
+    .from('spots')
+    .select('id, name, address, spot_categories ( name, icon )')
+    .in('id', spotIds)
+    .eq('verified', true)
+  spots = (data ?? []) as FavSpot[]
+}
+---
+
+<Layout title="Mis favoritos">
+  <main class="page">
+    <div class="container">
+      <a href="/app/map" class="back-link">← Volver al mapa</a>
+      <h1>Mis favoritos</h1>
+
+      {spots.length === 0 ? (
+        <p class="empty">Todavía no tenés spots guardados. Explorá el mapa y guardá los que te interesen.</p>
+      ) : (
+        <ul class="spot-list">
+          {spots.map(spot => (
+            <li class="spot-item">
+              <div class="spot-meta">
+                <span class="badge">{spot.spot_categories?.icon} {spot.spot_categories?.name}</span>
+              </div>
+              <div class="spot-row">
+                <div>
+                  <a href={`/app/spots/${spot.id}`} class="spot-name">{spot.name}</a>
+                  {spot.address && <p class="spot-address">📍 {spot.address}</p>}
+                </div>
+                <button class="remove-btn" data-id={spot.id} title="Quitar de favoritos">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </main>
+</Layout>
+
+<script>
+  document.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = (btn as HTMLElement).dataset.id
+      const res = await fetch('/api/favorites', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ spot_id: id }),
+      })
+      if (res.ok || res.status === 204) {
+        const item = (btn as HTMLElement).closest('.spot-item')
+        item?.remove()
+      }
+    })
+  })
+</script>
+
+<style>
+  .page { padding: 2rem 1.5rem; }
+  .container { max-width: 720px; margin: 0 auto; }
+  .back-link { color: var(--muted); font-size: 0.9rem; }
+  .back-link:hover { color: var(--text); }
+  h1 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 1.75rem; }
+
+  .empty { color: var(--muted); line-height: 1.7; }
+
+  .spot-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+  .spot-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+  }
+  .spot-meta { margin-bottom: 0.4rem; }
+  .badge {
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+  }
+  .spot-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .spot-name { font-weight: 600; font-size: 1rem; color: var(--text); text-decoration: none; }
+  .spot-name:hover { color: var(--accent); }
+  .spot-address { color: var(--muted); font-size: 0.82rem; margin-top: 0.2rem; }
+
+  .remove-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--accent); padding: 0.25rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: color 0.15s;
+  }
+  .remove-btn:hover { color: var(--danger); }
+</style>

@@ -272,6 +272,29 @@ export function MapView({ session }: { session: boolean }) {
       <LocateMeButton mapRef={mapRef} onLocate={(lat, lng) => setCenter([lat, lng])} />
 
       {session && (
+        <div style={{ position: 'fixed', bottom: '8.5rem', right: '1.5rem', zIndex: 1000 }}>
+          <a
+            href="/app/favorites"
+            title="Mis favoritos"
+            style={{
+              width: 44, height: 44, borderRadius: '50%',
+              background: '#1a1a1a', border: '1.5px solid #2a2a2a',
+              color: '#f1f1f1', textDecoration: 'none',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
+              transition: 'border-color 0.15s, color 0.15s',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#4ade80'; (e.currentTarget as HTMLElement).style.color = '#4ade80' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2a2a2a'; (e.currentTarget as HTMLElement).style.color = '#f1f1f1' }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </a>
+        </div>
+      )}
+
+      {session && (
         <div style={{
           position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 1000,
         }}>
