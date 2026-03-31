@@ -276,11 +276,8 @@ export function MapView({ session }: { session: boolean }) {
     if (!session) return
     fetch('/api/favorites')
       .then(r => r.json())
-      .then(data => {
-        console.log('[favorites GET]', data)
-        setFavorites(new Set(Array.isArray(data) ? data : []))
-      })
-      .catch(err => console.error('[favorites GET error]', err))
+      .then(data => setFavorites(new Set(Array.isArray(data) ? data : [])))
+      .catch(() => {})
   }, [session])
 
   // Fetch routes once

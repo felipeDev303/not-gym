@@ -24,7 +24,6 @@ export function SpotCard({ spot, isFavorite = false, session = false }: { spot: 
   const toggleFav = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    console.log('[fav] click spot_id:', spot.id, 'currently fav:', fav)
     if (loading) return
     setLoading(true)
     const method = fav ? 'DELETE' : 'POST'
@@ -33,7 +32,6 @@ export function SpotCard({ spot, isFavorite = false, session = false }: { spot: 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ spot_id: spot.id }),
     })
-    console.log('[fav] response status:', res.status)
     if (res.ok || res.status === 204 || res.status === 201) {
       setFav(!fav)
     } else {

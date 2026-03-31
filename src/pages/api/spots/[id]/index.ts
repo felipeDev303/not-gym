@@ -47,7 +47,9 @@ export const PUT: APIRoute = async ({ params, request, cookies, locals }) => {
     return new Response(JSON.stringify({ error: 'Prohibido' }), { status: 403 })
   }
 
-  const allowedFields = ['name', 'description', 'category_id', 'address', 'verified']
+  const ownerFields = ['name', 'description', 'address']
+  const adminFields = [...ownerFields, 'verified']
+  const allowedFields = isAdmin ? adminFields : ownerFields
   const updates = Object.fromEntries(
     Object.entries(body).filter(([key]) => allowedFields.includes(key))
   )

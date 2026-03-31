@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from '../../lib/supabase'
 
 const session = Astro.locals.session
 if (!session) return Astro.redirect('/login?redirect=/admin/spots')
+if (session.user.app_metadata?.role !== 'admin') return new Response('Forbidden', { status: 403 })
 
 const admin = createSupabaseAdminClient()
 const { data: spots, error } = await admin

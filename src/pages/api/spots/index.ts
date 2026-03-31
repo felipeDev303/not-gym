@@ -54,6 +54,23 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
   if (!name || !Array.isArray(category_ids) || category_ids.length === 0 || latitude == null || longitude == null) {
     return new Response(JSON.stringify({ error: 'Faltan campos requeridos: name, category_ids, latitude, longitude' }), { status: 400 })
   }
+  if (typeof name !== 'string' || name.trim().length < 3 || name.length > 100) {
+    return new Response(JSON.stringify({ error: 'El nombre debe tener entre 3 y 100 caracteres' }), { status: 400 })
+  }
+  if (description && (typeof description !== 'string' || description.length > 500)) {
+    return new Response(JSON.stringify({ error: 'La descripción no puede superar 500 caracteres' }), { status: 400 })
+  }
+  if (address && (typeof address !== 'string' || address.length > 200)) {
+    return new Response(JSON.stringify({ error: 'La dirección no puede superar 200 caracteres' }), { status: 400 })
+  }
+  const lat = parseFloat(latitude)
+  const lng = parseFloat(longitude)
+  if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    return new Response(JSON.stringify({ error: 'Coordenadas inválidas' }), { status: 400 })
+  }
+  if (!Array.isArray(category_ids) || category_ids.length > 5 || category_ids.some((id: unknown) => typeof id !== 'number' || !Number.isInteger(id))) {
+    return new Response(JSON.stringify({ error: 'category_ids inválidos' }), { status: 400 })
+  }
 
   const supabase = createSupabaseAdminClient()
 
