@@ -68,7 +68,15 @@ function LocateMeButton({ onLocate }: { onLocate: (lat: number, lng: number) => 
       <button onClick={handleClick} title="Centrar en mi ubicación" style={btnStyle}
         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#4ade80'; (e.currentTarget as HTMLElement).style.color = '#4ade80' }}
         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2a2a2a'; (e.currentTarget as HTMLElement).style.color = '#f1f1f1' }}
-      >⊕</button>
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <line x1="12" y1="2" x2="12" y2="6"/>
+          <line x1="12" y1="18" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="6" y2="12"/>
+          <line x1="18" y1="12" x2="22" y2="12"/>
+        </svg>
+      </button>
     </div>
   )
 }
@@ -130,7 +138,7 @@ export function MapView({ session }: { session: boolean }) {
   const [routes, setRoutes] = useState<Route[]>([])
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [radius, setRadius] = useState(5000)
-  const [center, setCenter] = useState<[number, number]>([-34.6037, -58.3816])
+  const [center, setCenter] = useState<[number, number]>([41.3851, 2.1734])
   const [ready, setReady] = useState(false)
 
   // Geolocation
