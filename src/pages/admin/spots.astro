@@ -10,7 +10,7 @@ const { data: spots, error } = await admin
   .from('spots')
   .select(`
     id, name, address, created_at,
-    spot_categories ( slug, name, icon )
+    spot_tags ( spot_categories ( slug, name, icon ) )
   `)
   .eq('verified', false)
   .order('created_at', { ascending: true })
@@ -20,7 +20,7 @@ type PendingSpot = {
   name: string
   address: string | null
   created_at: string
-  spot_categories: { slug: string; name: string; icon: string } | null
+  spot_tags: { spot_categories: { slug: string; name: string; icon: string } }[]
 }
 
 const pending = (spots ?? []) as unknown as PendingSpot[]
@@ -43,7 +43,7 @@ const pending = (spots ?? []) as unknown as PendingSpot[]
           <li class="spot-item" id={`spot-${spot.id}`}>
             <div class="spot-info">
               <span class="category">
-                {spot.spot_categories?.icon} {spot.spot_categories?.name}
+                {spot.spot_tags?.map(t => `${t.spot_categories.icon} ${t.spot_categories.name}`).join(' · ')}
               </span>
               <a href={`/app/spots/${spot.id}`} target="_blank" class="spot-name">
                 {spot.name}

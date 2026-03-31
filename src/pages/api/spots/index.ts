@@ -28,13 +28,13 @@ export const GET: APIRoute = async ({ url, request, cookies }) => {
     .select(`
       id, name, description, address, verified, created_at,
       location,
-      spot_categories ( slug, name, icon )
+      spot_tags ( spot_categories ( slug, name, icon ) )
     `)
     .eq('verified', true)
     .order('created_at', { ascending: false })
 
   if (category) {
-    query = query.eq('spot_categories.slug', category)
+    query = query.eq('spot_tags.spot_categories.slug', category)
   }
 
   const { data, error } = await query
