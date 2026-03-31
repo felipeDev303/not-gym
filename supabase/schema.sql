@@ -175,6 +175,28 @@ CREATE POLICY "routes_owner_delete"
   USING (auth.uid() = created_by);
 
 
+-- spot_tags (junction: spots ↔ spot_categories, many-to-many)
+CREATE TABLE spot_tags (
+  spot_id     UUID REFERENCES spots(id) ON DELETE CASCADE,
+  category_id INT  REFERENCES spot_categories(id) ON DELETE CASCADE,
+  PRIMARY KEY (spot_id, category_id)
+);
+ALTER TABLE spot_tags ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "tags_public_read" ON spot_tags FOR SELECT USING (TRUE);
+
+-- spot_favorites
+CREATE TABLE spot_favorites (
+  user_id    UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  spot_id    UUID REFERENCES spots(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, spot_id)
+);
+ALTER TABLE spot_favorites ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "favorites_own" ON spot_favorites
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+
 -- ============================================================
 -- 6. Storage bucket (hacer manualmente en el dashboard)
 -- ============================================================

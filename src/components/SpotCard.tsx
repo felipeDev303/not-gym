@@ -29,7 +29,12 @@ export function SpotCard({ spot, isFavorite = false, session = false }: { spot: 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ spot_id: spot.id }),
     })
-    if (res.ok || res.status === 204 || res.status === 201) setFav(!fav)
+    if (res.ok || res.status === 204 || res.status === 201) {
+      setFav(!fav)
+    } else {
+      const body = await res.json().catch(() => ({}))
+      console.error('[favorites] error', res.status, body)
+    }
     setLoading(false)
   }
 
