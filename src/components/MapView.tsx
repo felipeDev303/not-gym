@@ -1,12 +1,97 @@
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
 
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import * as turf from '@turf/turf'
 import { FilterBar } from './FilterBar'
 import { SpotCard, type Spot } from './SpotCard'
+
+// ─── Location search ─────────────────────────────────────────────────────────
+
+type GeoResult = { display_name: string; lat: string; lon: string }
+
+function LocationSearch({ onSelect }: { onSelect: (lat: number, lng: number, label: string) => void }) {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<GeoResult[]>([])
+  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const search = (q: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    if (!q.trim()) { setResults([]); setOpen(false); return }
+    debounceRef.current = setTimeout(async () => {
+      setLoading(true)
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5`,
+          { headers: { 'Accept-Language': 'es' } }
+        )
+        const data: GeoResult[] = await res.json()
+        setResults(data)
+        setOpen(data.length > 0)
+      } catch { setResults([]) }
+      finally { setLoading(false) }
+    }, 400)
+  }
+
+  const handleSelect = (r: GeoResult) => {
+    setQuery(r.display_name.split(',')[0])
+    setOpen(false)
+    setResults([])
+    onSelect(parseFloat(r.lat), parseFloat(r.lon), r.display_name)
+  }
+
+  return (
+    <div style={{ position: 'relative', padding: '0.5rem 0.75rem', background: '#111', borderBottom: '1px solid #2a2a2a' }}>
+      <div style={{ display: 'flex', alignItems: 'center', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 8, padding: '0.4rem 0.75rem', gap: '0.5rem' }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="text"
+          value={query}
+          placeholder="Buscar ciudad o lugar..."
+          onChange={e => { setQuery(e.target.value); search(e.target.value) }}
+          onBlur={() => setTimeout(() => setOpen(false), 150)}
+          style={{
+            flex: 1, background: 'none', border: 'none', outline: 'none',
+            color: '#f1f1f1', fontSize: '0.875rem', fontFamily: 'system-ui, sans-serif',
+          }}
+        />
+        {loading && <span style={{ fontSize: '0.75rem', color: '#888' }}>...</span>}
+        {query && !loading && (
+          <button onClick={() => { setQuery(''); setResults([]); setOpen(false) }}
+            style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '1rem', padding: 0, lineHeight: 1 }}>✕</button>
+        )}
+      </div>
+      {open && (
+        <ul style={{
+          position: 'absolute', top: '100%', left: '0.75rem', right: '0.75rem', zIndex: 2000,
+          background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 8,
+          margin: 0, padding: '0.25rem 0', listStyle: 'none',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.5)', maxHeight: 220, overflowY: 'auto',
+        }}>
+          {results.map((r, i) => (
+            <li key={i}
+              onMouseDown={() => handleSelect(r)}
+              style={{
+                padding: '0.5rem 0.85rem', cursor: 'pointer', fontSize: '0.825rem',
+                color: '#f1f1f1', borderBottom: i < results.length - 1 ? '1px solid #2a2a2a' : 'none',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#252525')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              {r.display_name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
 
 const CATEGORIES = [
   { slug: 'calistenia',     name: 'Calistenia',    icon: '🏋️' },
@@ -223,6 +308,10 @@ export function MapView({ session }: { session: boolean }) {
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+      <LocationSearch onSelect={(lat, lng) => {
+        mapRef.current?.setView([lat, lng], 13)
+        setCenter([lat, lng])
+      }} />
       <FilterBar
         categories={CATEGORIES}
         active={activeCategory}
