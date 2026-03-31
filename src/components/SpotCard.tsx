@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type React from 'react'
 
 export type Spot = {
@@ -18,6 +18,8 @@ export type Spot = {
 export function SpotCard({ spot, isFavorite = false, session = false }: { spot: Spot; isFavorite?: boolean; session?: boolean }) {
   const [fav, setFav] = useState(isFavorite)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => { setFav(isFavorite) }, [isFavorite])
 
   const toggleFav = async (e: React.MouseEvent) => {
     e.preventDefault()
