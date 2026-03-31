@@ -31,13 +31,15 @@ const lng = Astro.url.searchParams.get('lng') ?? ''
         </div>
 
         <div class="field">
-          <label for="category_id">Categoría *</label>
-          <select id="category_id" name="category_id" required>
-            <option value="">Seleccioná una categoría</option>
+          <label>Deportes * <span class="hint-inline">(seleccioná uno o más)</span></label>
+          <div class="category-grid">
             {categories?.map(c => (
-              <option value={c.id}>{c.icon} {c.name}</option>
+              <label class="cat-option">
+                <input type="checkbox" name="category_ids" value={c.id} />
+                <span>{c.icon} {c.name}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </div>
 
         <div class="field-row">
@@ -78,13 +80,22 @@ const lng = Astro.url.searchParams.get('lng') ?? ''
     e.preventDefault()
     const data = Object.fromEntries(new FormData(form))
 
+    const checked = [...form.querySelectorAll('input[name="category_ids"]:checked')]
+    const category_ids = checked.map(el => parseInt((el as HTMLInputElement).value))
+    if (category_ids.length === 0) {
+      statusMsg.className = 'status-msg error'
+      statusMsg.textContent = 'Seleccioná al menos un deporte.'
+      statusMsg.style.display = 'block'
+      return
+    }
+
     const res = await fetch('/api/spots', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: data.name,
         description: data.description || null,
-        category_id: parseInt(data.category_id as string),
+        category_ids,
         latitude: parseFloat(data.latitude as string),
         longitude: parseFloat(data.longitude as string),
         address: data.address || null,
@@ -118,6 +129,23 @@ const lng = Astro.url.searchParams.get('lng') ?? ''
   .field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.1rem; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
   label { font-size: 0.85rem; color: var(--muted); }
+
+  .hint-inline { font-size: 0.78rem; color: var(--muted); font-weight: 400; }
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.4rem;
+  }
+  .cat-option {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.45rem 0.7rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer; font-size: 0.875rem;
+    transition: border-color 0.15s;
+  }
+  .cat-option:hover { border-color: var(--accent); }
+  .cat-option input[type=checkbox] { accent-color: var(--accent); width: 14px; height: 14px; }
+  .cat-option:has(input:checked) { border-color: var(--accent); background: #0d2918; }
 
   input, select, textarea {
     background: var(--surface);

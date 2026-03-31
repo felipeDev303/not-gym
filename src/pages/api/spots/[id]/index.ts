@@ -10,7 +10,7 @@ export const GET: APIRoute = async ({ params, request, cookies }) => {
     .select(`
       id, name, description, address, verified, created_at,
       location,
-      spot_categories ( slug, name, icon ),
+      spot_tags ( spot_categories ( slug, name, icon ) ),
       spot_photos ( id, url, created_at )
     `)
     .eq('id', id!)

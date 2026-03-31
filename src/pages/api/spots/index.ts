@@ -16,7 +16,7 @@ export const GET: APIRoute = async ({ url, request, cookies }) => {
       radius: parseInt(radius),
     })
     if (category) {
-      query = query.eq('category_slug', category)
+      query = query.contains('category_slugs', [category])
     }
     const { data, error } = await query
     if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })
@@ -49,10 +49,10 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
   }
 
   const body = await request.json()
-  const { name, description, category_id, latitude, longitude, address } = body
+  const { name, description, category_ids, latitude, longitude, address } = body
 
-  if (!name || !category_id || latitude == null || longitude == null) {
-    return new Response(JSON.stringify({ error: 'Faltan campos requeridos: name, category_id, latitude, longitude' }), { status: 400 })
+  if (!name || !Array.isArray(category_ids) || category_ids.length === 0 || latitude == null || longitude == null) {
+    return new Response(JSON.stringify({ error: 'Faltan campos requeridos: name, category_ids, latitude, longitude' }), { status: 400 })
   }
 
   const supabase = createSupabaseAdminClient()
@@ -62,7 +62,6 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     .insert({
       name,
       description,
-      category_id,
       location: `POINT(${longitude} ${latitude})`,
       address,
       created_by: session.user.id,
@@ -72,5 +71,10 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     .single()
 
   if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+
+  const tags = category_ids.map((cid: number) => ({ spot_id: data.id, category_id: cid }))
+  const { error: tagError } = await supabase.from('spot_tags').insert(tags)
+  if (tagError) return new Response(JSON.stringify({ error: tagError.message }), { status: 500 })
+
   return new Response(JSON.stringify(data), { status: 201 })
 }

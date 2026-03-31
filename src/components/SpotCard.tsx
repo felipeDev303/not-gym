@@ -7,6 +7,8 @@ export type Spot = {
   description: string | null
   category_slug: string
   category_icon: string
+  category_slugs: string[]
+  category_icons: string[]
   latitude: number
   longitude: number
   address: string | null
@@ -35,8 +37,12 @@ export function SpotCard({ spot, isFavorite = false, session = false }: { spot: 
     <div style={{ minWidth: 180, fontFamily: 'system-ui, sans-serif' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem' }}>
         <div>
-          <div style={{ fontSize: '0.72rem', color: '#888', marginBottom: '0.25rem' }}>
-            {spot.category_icon} {spot.category_slug.replace('_', ' ')}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginBottom: '0.25rem' }}>
+            {(spot.category_icons ?? [spot.category_icon]).map((icon, i) => (
+              <span key={i} style={{ fontSize: '0.72rem', color: '#888' }}>
+                {icon} {(spot.category_slugs ?? [spot.category_slug])[i]?.replace(/_/g, ' ')}
+              </span>
+            ))}
           </div>
           <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#f1f1f1', marginBottom: '0.25rem' }}>
             {spot.name}
